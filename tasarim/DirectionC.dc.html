@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Manrope', system-ui, sans-serif; }
+    a { color: oklch(68% 0.16 35); } a:hover { color: oklch(58% 0.16 35); }
+  </style>
+</helmet>
+
+<div style="width: 640px; min-height: 900px; background: oklch(98% 0.01 60); color: oklch(25% 0.02 30); padding: 44px 40px 40px; display: flex; flex-direction: column; gap: 28px;">
+
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <div style="width: 8px; height: 8px; border-radius: 50%; background: oklch(68% 0.16 35);"></div>
+    <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(50% 0.03 30);">Yön C &mdash; Mercan</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <svg width="52" height="52" viewBox="0 0 52 52" style="flex-shrink: 0;">
+      <circle cx="26" cy="26" r="24" fill="oklch(94% 0.03 40)"/>
+      <path d="M26 12 C29 20 32 23 40 26 C32 29 29 32 26 40 C23 32 20 29 12 26 C20 23 23 20 26 12 Z" fill="oklch(68% 0.16 35)"/>
+      <circle cx="26" cy="26" r="3" fill="oklch(98% 0.01 60)"/>
+    </svg>
+    <div>
+      <div style="font-family: 'Instrument Serif', serif; font-size: 30px; font-style: italic; letter-spacing: -0.01em; line-height: 1; color: oklch(30% 0.05 30);">Yorum Pusulası</div>
+      <div style="font-size: 12.5px; color: oklch(50% 0.03 30); margin-top: 5px;">Her yorumda bir yön var</div>
+    </div>
+  </div>
+
+  <div style="padding-top: 4px;">
+    <h1 style="font-family: 'Instrument Serif', serif; font-size: 40px; font-weight: 400; line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.01em; color: oklch(28% 0.03 30);">Yorumların ne söylüyor?</h1>
+    <p style="font-size: 15px; line-height: 1.6; color: oklch(45% 0.02 30); margin: 0; max-width: 480px;">Tek bir geri bildirimi keşfet ya da dosyanı yükleyip müşteri duygusunun genel görünümünü çıkar.</p>
+  </div>
+
+  <div style="background: oklch(100% 0 0); border-radius: 28px; padding: 24px 26px; box-shadow: 0 1px 2px oklch(50% 0.03 30 / 0.06);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <span style="font-size: 12.5px; color: oklch(55% 0.02 30);">Az önce</span>
+      <span style="font-size: 11.5px; font-weight: 700; padding: 5px 13px; border-radius: 999px; background: oklch(45% 0.15 20 / 0.12); color: oklch(40% 0.15 20);">Olumsuz</span>
+    </div>
+    <p style="font-size: 14.5px; line-height: 1.6; margin: 0 0 20px; color: oklch(30% 0.02 30);">&ldquo;Kargo hızlıydı ama ürünün kalitesi hiç iyi değildi, çok pahalıydı.&rdquo;</p>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: conic-gradient(oklch(45% 0.15 20) 280deg, oklch(94% 0.02 40) 0deg); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: oklch(100% 0 0); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: oklch(30% 0.02 30);">78%</div>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 11px; color: oklch(55% 0.02 30); width: 44px;">Olumlu</span><div style="flex:1; height: 6px; background: oklch(94% 0.02 40); border-radius: 3px; overflow: hidden;"><div style="width: 2%; height: 100%; background: oklch(65% 0.12 155);"></div></div></div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 11px; color: oklch(55% 0.02 30); width: 44px;">Nötr</span><div style="flex:1; height: 6px; background: oklch(94% 0.02 40); border-radius: 3px; overflow: hidden;"><div style="width: 20%; height: 100%; background: oklch(75% 0.1 80);"></div></div></div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 11px; color: oklch(55% 0.02 30); width: 44px;">Olumsuz</span><div style="flex:1; height: 6px; background: oklch(94% 0.02 40); border-radius: 3px; overflow: hidden;"><div style="width: 78%; height: 100%; background: oklch(45% 0.15 20);"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 10px;">
+    <div style="flex: 1; height: 46px; background: oklch(68% 0.16 35); color: oklch(99% 0.005 40); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 999px;">Analiz et</div>
+    <div style="flex: 1; height: 46px; background: oklch(94% 0.02 40); color: oklch(35% 0.03 30); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 999px;">Yeni analiz</div>
+  </div>
+
+  <div style="padding-top: 6px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(50% 0.03 30);">Tipografi</div>
+    <div style="display: flex; align-items: baseline; gap: 16px;">
+      <span style="font-family: 'Instrument Serif', serif; font-size: 26px; font-style: italic;">Instrument Serif</span>
+      <span style="font-size: 12px; color: oklch(50% 0.03 30);">başlıklar</span>
+    </div>
+    <div style="display: flex; align-items: baseline; gap: 16px;">
+      <span style="font-family: 'Manrope', sans-serif; font-size: 17px; font-weight: 700;">Manrope</span>
+      <span style="font-size: 12px; color: oklch(50% 0.03 30);">gövde &amp; arayüz</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(50% 0.03 30);">Palet</div>
+    <div style="display: flex; gap: 8px;">
+      <div style="flex: 1; text-align: center;"><div style="height: 44px; border-radius: 10px; background: oklch(98% 0.01 60); border: 1px solid oklch(90% 0.02 40);"></div><span style="font-size: 9.5px; color: oklch(50% 0.03 30);">Zemin</span></div>
+      <div style="flex: 1; text-align: center;"><div style="height: 44px; border-radius: 10px; background: oklch(68% 0.16 35);"></div><span style="font-size: 9.5px; color: oklch(50% 0.03 30);">Mercan</span></div>
+      <div style="flex: 1; text-align: center;"><div style="height: 44px; border-radius: 10px; background: oklch(35% 0.08 320);"></div><span style="font-size: 9.5px; color: oklch(50% 0.03 30);">Erik</span></div>
+      <div style="flex: 1; text-align: center;"><div style="height: 44px; border-radius: 10px; background: oklch(65% 0.12 155);"></div><span style="font-size: 9.5px; color: oklch(50% 0.03 30);">Olumlu</span></div>
+      <div style="flex: 1; text-align: center;"><div style="height: 44px; border-radius: 10px; background: oklch(45% 0.15 20);"></div><span style="font-size: 9.5px; color: oklch(50% 0.03 30);">Olumsuz</span></div>
+    </div>
+  </div>
+
+  <p style="font-size: 12px; line-height: 1.6; color: oklch(50% 0.03 30); margin: 8px 0 0;">Ton: sıcak, insan-öncelikli, davetkâr. Pill-shaped butonlar, italik serif başlıklar, yumuşak ama jenerik-olmayan bir "SaaS değil, gerçek insanlar için" hissi.</p>
+
+</div>
+</x-dc>
+</body>
+</html>

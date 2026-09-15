@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* Karanlık mod ("Gece rotası"), OS tercihine değil <html class="dark">
+   class'ına bağlı — tek kaynak App.tsx'teki state. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: 'Spectral', ui-serif, Georgia, serif;
+  --font-sans: 'Work Sans', system-ui, sans-serif;
+}
+
+/* Kartografik yön: bir kaşif günlüğü / saha notu hissi. Aydınlıkta sıcak
+   kağıt + lacivert mürekkep; karanlıkta ("Gece rotası") gece göğü lacivert
+   + pirinç/brass vurgu — sadece renk tersine çevrilmiyor, "gece
+   navigasyonu" temasıyla tutarlı ayrı bir kimlik kazanıyor (vurgu rengi
+   bile değişiyor: aydınlıkta lacivert, karanlıkta pirinç). */
+:root {
+  --page-plane: oklch(97% 0.015 85);
+  --surface-1: oklch(99% 0.008 85);
+  --surface-2: oklch(94% 0.015 85);
+  --text-primary: oklch(22% 0.02 260);
+  --text-secondary: oklch(45% 0.03 260);
+  --text-muted: oklch(52% 0.03 260);
+  --border: oklch(82% 0.02 85);
+  --gridline: oklch(90% 0.01 85);
+  --good: oklch(50% 0.1 150);
+  --critical: oklch(55% 0.14 25);
+  --critical-text: oklch(45% 0.14 25);
+  --brass: oklch(65% 0.09 75);
+  --brass-text: oklch(45% 0.08 75);
+  --accent: oklch(35% 0.08 260);
+  --accent-ink: oklch(97% 0.015 85);
+  --accent-wash: oklch(94% 0.02 80);
+}
+
+.dark {
+  --page-plane: oklch(19% 0.025 260);
+  --surface-1: oklch(24% 0.025 260);
+  --surface-2: oklch(16% 0.02 260);
+  --text-primary: oklch(96% 0.01 85);
+  --text-secondary: oklch(70% 0.02 85);
+  --text-muted: oklch(62% 0.03 85);
+  --border: oklch(35% 0.03 260);
+  --gridline: oklch(32% 0.02 260);
+  --good: oklch(70% 0.14 150);
+  --critical: oklch(65% 0.18 25);
+  --critical-text: oklch(78% 0.16 25);
+  --brass: oklch(70% 0.1 75);
+  --brass-text: oklch(85% 0.08 75);
+  --accent: oklch(70% 0.1 75);
+  --accent-ink: oklch(16% 0.02 260);
+  --accent-wash: oklch(30% 0.05 75);
+}
+
+body {
+  background: var(--page-plane);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Mikro-animasyonlar — tasarım turunda spesifiye edildi. */
+@keyframes sonuc-belir {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sonuc-animasyonu {
+  animation: sonuc-belir 220ms cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes karma-parilti {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--brass) 45%, transparent); }
+  100% { box-shadow: 0 0 0 10px color-mix(in oklch, var(--brass) 0%, transparent); }
+}
+.karma-rozet-animasyonu {
+  animation: karma-parilti 900ms ease-out 150ms both;
+}
+
+/* Güven halkasının dolum animasyonu (ResultCard) JS-kontrollü bir
+   stroke-dashoffset transition'ı ile yapılıyor, doğrudan bileşende. */
+
+@media (prefers-reduced-motion: reduce) {
+  .sonuc-animasyonu, .karma-rozet-animasyonu {
+    animation: none;
+  }
+}

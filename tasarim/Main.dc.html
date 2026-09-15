@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Work Sans', system-ui, sans-serif; }
+    a { color: #3a4a63; } a:hover { color: #24314a; }
+    ::selection { background: oklch(80% 0.06 75 / 0.5); }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background: oklch(97% 0.015 85); color: oklch(22% 0.02 260); padding: 0 0 60px;">
+
+  <!-- ===== Üst çubuk ===== -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 26px 64px; border-bottom: 1px solid oklch(85% 0.02 85);">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <svg width="38" height="38" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="24" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1.4"/>
+        <circle cx="26" cy="26" r="1.8" fill="oklch(65% 0.09 75)"/>
+        <path d="M26 4 L29.5 23 L26 26 L22.5 23 Z" fill="oklch(35% 0.08 260)"/>
+        <path d="M26 48 L22.5 29 L26 26 L29.5 29 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+        <path d="M4 26 L23 22.5 L26 26 L23 29.5 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+        <path d="M48 26 L29 29.5 L26 26 L29 22.5 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+      </svg>
+      <div>
+        <div style="font-family: 'Spectral', serif; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; line-height: 1;">Yorum Pusulası</div>
+        <div style="font-size: 11px; color: oklch(50% 0.03 260); margin-top: 3px; font-style: italic;">Müşteri sesine yön bul</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <div style="display: flex; align-items: center; gap: 7px; font-size: 12px; color: oklch(50% 0.03 260);">
+        <div style="width: 6px; height: 6px; border-radius: 50%; background: oklch(55% 0.1 150);"></div>
+        duygu_finetuned_v5_full
+      </div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 7px 5px 7px 14px; border: 1px solid oklch(80% 0.02 85); border-radius: 999px;">
+        <span style="font-size: 12px; color: oklch(45% 0.03 260); font-weight: 500;">Gece rotası</span>
+        <div style="width: 34px; height: 19px; border-radius: 999px; background: oklch(88% 0.02 85); position: relative; padding: 2px;">
+          <div style="width: 15px; height: 15px; border-radius: 50%; background: oklch(35% 0.08 260);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 44px 64px 0; max-width: 1312px; margin: 0 auto;">
+
+    <!-- ===== Başlık ===== -->
+    <div style="margin-bottom: 34px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+        <div style="width: 20px; height: 1px; background: oklch(65% 0.09 75);"></div>
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: oklch(55% 0.08 75);">Saha Notu</span>
+      </div>
+      <h1 style="font-family: 'Spectral', serif; font-size: 44px; font-weight: 500; line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.01em;">Yorumların ne söylüyor?</h1>
+      <p style="font-size: 15.5px; line-height: 1.6; color: oklch(40% 0.03 260); margin: 0; max-width: 560px;">Tek bir geri bildirimi keşfet ya da dosyanı yükleyip müşteri duygusunun genel görünümünü çıkar.</p>
+    </div>
+
+    <!-- ===== Sekmeler (dosya klasörü fişi gibi) ===== -->
+    <div style="display: flex; gap: 2px; margin-bottom: -1px; position: relative; z-index: 1;">
+      <div style="padding: 12px 26px; background: oklch(99% 0.008 85); border: 1px solid oklch(82% 0.02 85); border-bottom: none; border-radius: 6px 6px 0 0; font-size: 13.5px; font-weight: 600; color: oklch(35% 0.08 260);">Tekil analiz</div>
+      <div style="padding: 12px 26px; font-size: 13.5px; font-weight: 500; color: oklch(50% 0.03 260);">Dosya analizi</div>
+    </div>
+
+    <!-- ===== Ana içerik ===== -->
+    <div style="display: flex; gap: 28px; align-items: stretch; border-top: 1px solid oklch(82% 0.02 85); background: oklch(99% 0.008 85); border: 1px solid oklch(82% 0.02 85); border-radius: 0 8px 8px 8px; padding: 36px;">
+
+      <!-- Sol: giriş -->
+      <div style="flex: 1; display: flex; flex-direction: column;">
+        <div style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.08 75); margin-bottom: 10px;">Kayıt No. 0417</div>
+        <div style="font-family: 'Spectral', serif; font-size: 19px; font-weight: 600; margin-bottom: 6px;">Yorumu incele</div>
+        <p style="font-size: 13.5px; color: oklch(45% 0.03 260); margin: 0 0 18px;">Müşterinin yazdığı geri bildirimi aşağıya yapıştır.</p>
+        <div style="flex: 1; border: 1px solid oklch(80% 0.02 85); border-radius: 4px; background: oklch(100% 0 0); padding: 18px; font-family: 'Spectral', serif; font-size: 15px; font-style: italic; color: oklch(28% 0.02 260); line-height: 1.6; background-image: repeating-linear-gradient(transparent, transparent 27px, oklch(90% 0.015 85) 28px); background-position: 0 6px;">
+          &ldquo;Kargo hızlıydı ama ürünün kalitesi hiç iyi değildi, çok pahalıydı.&rdquo;
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <div style="flex: 1.6; height: 46px; background: oklch(35% 0.08 260); color: oklch(97% 0.015 85); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 600; border-radius: 4px;">
+            Analiz Et
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+          <div style="flex: 1; height: 46px; border: 1px solid oklch(35% 0.08 260); color: oklch(35% 0.08 260); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; border-radius: 4px;">Yeni Kayıt</div>
+        </div>
+      </div>
+
+      <!-- Ayırıcı -->
+      <div style="width: 1px; background: repeating-linear-gradient(to bottom, oklch(82% 0.02 85) 0, oklch(82% 0.02 85) 5px, transparent 5px, transparent 10px);"></div>
+
+      <!-- Sağ: sonuç -->
+      <div style="flex: 1.15; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="border: 1px solid oklch(55% 0.14 25 / 0.35); border-radius: 6px; padding: 22px; background: oklch(96% 0.02 25 / 0.4); position: relative;">
+          <div style="position: absolute; top: -1px; left: 22px; width: 30px; height: 3px; background: oklch(55% 0.14 25);"></div>
+          <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+            <svg width="58" height="58" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="17" fill="none" stroke="oklch(88% 0.02 85)" stroke-width="3"/>
+              <circle cx="20" cy="20" r="17" fill="none" stroke="oklch(55% 0.14 25)" stroke-width="3" stroke-dasharray="78.5 106.9" stroke-linecap="round" transform="rotate(-90 20 20)"/>
+              <text x="20" y="24" text-anchor="middle" font-size="10" font-family="Work Sans" font-weight="700" fill="oklch(30% 0.02 260)">78%</text>
+            </svg>
+            <div>
+              <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(45% 0.14 25); margin-bottom: 4px;">Baskın Yön</div>
+              <div style="font-family: 'Spectral', serif; font-size: 25px; font-weight: 600; color: oklch(40% 0.14 25); line-height: 1;">Olumsuz</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 1px solid oklch(55% 0.14 25 / 0.2);">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: oklch(45% 0.03 260);"><span style="width: 50px;">Olumlu</span><div style="flex:1; height: 5px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 0.3%; height: 100%; background: oklch(55% 0.1 150);"></div></div><span style="width: 32px; text-align: right;">%0.3</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: oklch(45% 0.03 260);"><span style="width: 50px;">Nötr</span><div style="flex:1; height: 5px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 21.6%; height: 100%; background: oklch(65% 0.09 75);"></div></div><span style="width: 32px; text-align: right;">%21.6</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: oklch(45% 0.03 260);"><span style="width: 50px;">Olumsuz</span><div style="flex:1; height: 5px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 78%; height: 100%; background: oklch(55% 0.14 25);"></div></div><span style="width: 32px; text-align: right; font-weight: 600; color: oklch(30% 0.02 260);">%78</span></div>
+          </div>
+        </div>
+
+        <div style="border-radius: 6px; padding: 16px 18px; background: oklch(94% 0.03 75 / 0.5); border: 1px solid oklch(65% 0.09 75 / 0.45);">
+          <div style="display: flex; align-items: center; gap: 7px; margin-bottom: 3px;">
+          <svg width="14" height="14" viewBox="0 0 52 52" style="flex-shrink: 0;"><circle cx="26" cy="26" r="23" fill="none" stroke="oklch(45% 0.08 75)" stroke-width="3"/><path d="M26 6 L32 26 L26 46 L20 26 Z" fill="oklch(45% 0.08 75)"/></svg>
+          <span style="font-family: 'Spectral', serif; font-style: italic; font-size: 13.5px; font-weight: 600; color: oklch(45% 0.08 75);">Karma yön tespit edildi</span>
+        </div>
+          <p style="font-size: 12.5px; line-height: 1.55; margin: 0; color: oklch(38% 0.05 75);">Bu yorumda konuya göre farklı tonlar var — aşağıdaki konu bazlı kayıtta ayrıştırılmış hâlini bulabilirsin.</p>
+        </div>
+
+        <div>
+          <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(50% 0.03 260); margin-bottom: 10px;">Konu Bazlı Kayıt</div>
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;"><span style="width: 60px; font-weight: 600;">Kargo</span><span style="flex: 1; font-style: italic; color: oklch(45% 0.03 260);">&ldquo;Kargo hızlıydı&rdquo;</span><span style="font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: oklch(65% 0.09 75 / 0.22); color: oklch(45% 0.08 75);">Nötr</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;"><span style="width: 60px; font-weight: 600;">Kalite</span><span style="flex: 1; font-style: italic; color: oklch(45% 0.03 260);">&ldquo;kalitesi hiç iyi değildi&rdquo;</span><span style="font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: oklch(55% 0.14 25 / 0.16); color: oklch(45% 0.14 25);">Olumsuz</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;"><span style="width: 60px; font-weight: 600;">Fiyat</span><span style="flex: 1; font-style: italic; color: oklch(45% 0.03 260);">&ldquo;çok pahalıydı&rdquo;</span><span style="font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: oklch(55% 0.14 25 / 0.16); color: oklch(45% 0.14 25);">Olumsuz</span></div>
+          </div>
+        </div>
+
+        <div style="align-self: flex-start; font-size: 12.5px; font-weight: 600; color: oklch(35% 0.08 260); border: 1px solid oklch(35% 0.08 260 / 0.4); padding: 8px 16px; border-radius: 4px;">Sonucu kopyala</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Alt bilgi ===== -->
+  <div style="max-width: 1312px; margin: 40px auto 0; padding: 0 64px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid oklch(85% 0.02 85); padding-top: 18px;">
+    <span style="font-size: 11.5px; color: oklch(55% 0.03 260);">Yorum Pusulası &middot; Türkçe müşteri yorumları için 3 sınıflı duygu analizi</span>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <svg width="14" height="14" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" fill="none" stroke="oklch(65% 0.06 260)" stroke-width="2"/><circle cx="26" cy="26" r="1.8" fill="oklch(65% 0.09 75)"/></svg>
+      <span style="font-size: 11px; color: oklch(55% 0.03 260); font-style: italic;">Kuzey her zaman yukarıda.</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Work Sans', system-ui, sans-serif; }
+    a { color: #3a4a63; } a:hover { color: #24314a; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background: oklch(97% 0.015 85); color: oklch(22% 0.02 260); padding: 0 0 60px;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 26px 64px; border-bottom: 1px solid oklch(85% 0.02 85);">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <svg width="38" height="38" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="24" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1.4"/>
+        <circle cx="26" cy="26" r="1.8" fill="oklch(65% 0.09 75)"/>
+        <path d="M26 4 L29.5 23 L26 26 L22.5 23 Z" fill="oklch(35% 0.08 260)"/>
+        <path d="M26 48 L22.5 29 L26 26 L29.5 29 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+        <path d="M4 26 L23 22.5 L26 26 L23 29.5 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+        <path d="M48 26 L29 29.5 L26 26 L29 22.5 Z" fill="none" stroke="oklch(35% 0.08 260)" stroke-width="1"/>
+      </svg>
+      <div>
+        <div style="font-family: 'Spectral', serif; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; line-height: 1;">Yorum Pusulası</div>
+        <div style="font-size: 11px; color: oklch(50% 0.03 260); margin-top: 3px; font-style: italic;">Müşteri sesine yön bul</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 9px; padding: 7px 5px 7px 14px; border: 1px solid oklch(80% 0.02 85); border-radius: 999px;">
+      <span style="font-size: 12px; color: oklch(45% 0.03 260); font-weight: 500;">Gece rotası</span>
+      <div style="width: 34px; height: 19px; border-radius: 999px; background: oklch(88% 0.02 85); position: relative; padding: 2px;">
+        <div style="width: 15px; height: 15px; border-radius: 50%; background: oklch(35% 0.08 260);"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 44px 64px 0; max-width: 1312px; margin: 0 auto;">
+
+    <div style="margin-bottom: 34px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+        <div style="width: 20px; height: 1px; background: oklch(65% 0.09 75);"></div>
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: oklch(55% 0.08 75);">Saha Notu</span>
+      </div>
+      <h1 style="font-family: 'Spectral', serif; font-size: 44px; font-weight: 500; line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.01em;">Yorumların ne söylüyor?</h1>
+      <p style="font-size: 15.5px; line-height: 1.6; color: oklch(40% 0.03 260); margin: 0; max-width: 560px;">Tek bir geri bildirimi keşfet ya da dosyanı yükleyip müşteri duygusunun genel görünümünü çıkar.</p>
+    </div>
+
+    <div style="display: flex; gap: 2px; margin-bottom: -1px; position: relative; z-index: 1;">
+      <div style="padding: 12px 26px; font-size: 13.5px; font-weight: 500; color: oklch(50% 0.03 260);">Tekil analiz</div>
+      <div style="padding: 12px 26px; background: oklch(99% 0.008 85); border: 1px solid oklch(82% 0.02 85); border-bottom: none; border-radius: 6px 6px 0 0; font-size: 13.5px; font-weight: 600; color: oklch(35% 0.08 260);">Dosya analizi</div>
+    </div>
+
+    <div style="border: 1px solid oklch(82% 0.02 85); background: oklch(99% 0.008 85); border-radius: 8px 8px 8px 8px; padding: 36px; display: flex; flex-direction: column; gap: 30px;">
+
+      <!-- Yükleme -->
+      <div style="border: 1.5px dashed oklch(70% 0.08 75); border-radius: 6px; padding: 26px 30px; display: flex; align-items: center; gap: 22px; background: oklch(96% 0.02 80 / 0.4);">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="oklch(45% 0.08 75)" stroke-width="1.6" style="flex-shrink:0;"><path d="M12 3v12M7 8l5-5 5 5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        <div style="flex: 1;">
+          <div style="font-family: 'Spectral', serif; font-size: 17px; font-weight: 600;">manifest_yorumlar.csv</div>
+          <div style="font-size: 12.5px; color: oklch(50% 0.03 260); margin-top: 3px;">183 satır tespit edildi &middot; CSV, Excel (.xlsx) veya JSON kabul edilir, <strong>yorum</strong> adlı sütun aranır.</div>
+        </div>
+        <div style="height: 42px; padding: 0 22px; background: oklch(35% 0.08 260); color: oklch(97% 0.015 85); display: flex; align-items: center; font-size: 13.5px; font-weight: 600; border-radius: 4px;">Kaydı Aç</div>
+      </div>
+
+      <!-- Ozet -->
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: oklch(82% 0.02 85); border: 1px solid oklch(82% 0.02 85); border-radius: 6px; overflow: hidden;">
+        <div style="background: oklch(99% 0.008 85); padding: 18px 20px;"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.03 260); margin-bottom: 8px;">Toplam Kayıt</div><div style="font-family: 'Spectral', serif; font-size: 28px; font-weight: 600;">183</div></div>
+        <div style="background: oklch(99% 0.008 85); padding: 18px 20px;"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.03 260); margin-bottom: 8px;">Olumlu</div><div style="font-family: 'Spectral', serif; font-size: 28px; font-weight: 600; color: oklch(50% 0.1 150);">76</div></div>
+        <div style="background: oklch(99% 0.008 85); padding: 18px 20px;"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.03 260); margin-bottom: 8px;">Nötr</div><div style="font-family: 'Spectral', serif; font-size: 28px; font-weight: 600; color: oklch(50% 0.08 75);">52</div></div>
+        <div style="background: oklch(99% 0.008 85); padding: 18px 20px;"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.03 260); margin-bottom: 8px;">Olumsuz</div><div style="font-family: 'Spectral', serif; font-size: 28px; font-weight: 600; color: oklch(50% 0.14 25);">55</div></div>
+        <div style="background: oklch(99% 0.008 85); padding: 18px 20px;"><div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(55% 0.03 260); margin-bottom: 8px;">Ort. Güven</div><div style="font-family: 'Spectral', serif; font-size: 28px; font-weight: 600;">%94.1</div></div>
+      </div>
+
+      <!-- Dagilim -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px;"><span style="width: 56px; color: oklch(45% 0.03 260);">Olumlu</span><div style="flex:1; height: 22px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 41.5%; height: 100%; background: oklch(55% 0.1 150);"></div></div><span style="width: 28px; font-weight: 600; text-align: right;">76</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px;"><span style="width: 56px; color: oklch(45% 0.03 260);">Nötr</span><div style="flex:1; height: 22px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 28.4%; height: 100%; background: oklch(65% 0.09 75);"></div></div><span style="width: 28px; font-weight: 600; text-align: right;">52</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px;"><span style="width: 56px; color: oklch(45% 0.03 260);">Olumsuz</span><div style="flex:1; height: 22px; background: oklch(90% 0.01 85); border-radius: 3px; overflow: hidden;"><div style="width: 30%; height: 100%; background: oklch(55% 0.14 25);"></div></div><span style="width: 28px; font-weight: 600; text-align: right;">55</span></div>
+      </div>
+
+      <!-- Tablo -->
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <div style="font-family: 'Spectral', serif; font-size: 18px; font-weight: 600;">Manifest &mdash; Detaylı Kayıtlar</div>
+          <div style="display: flex; gap: 10px;">
+            <div style="height: 36px; padding: 0 14px; border: 1px solid oklch(80% 0.02 85); border-radius: 4px; display: flex; align-items: center; font-size: 12.5px; color: oklch(50% 0.03 260); background: oklch(100% 0 0);">Yorumlarda ara&hellip;</div>
+            <div style="height: 36px; padding: 0 14px; border: 1px solid oklch(80% 0.02 85); border-radius: 4px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: oklch(50% 0.03 260); background: oklch(100% 0 0);">Tüm yönler <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid oklch(82% 0.02 85); border-radius: 6px; overflow: hidden;">
+          <thead>
+            <tr style="background: oklch(94% 0.015 85);">
+              <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(50% 0.03 260); padding: 12px 18px;">Yorum</th>
+              <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(50% 0.03 260); padding: 12px 18px; width: 140px;">Yön</th>
+              <th style="text-align: right; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(50% 0.03 260); padding: 12px 18px; width: 100px;">Güven</th>
+            </tr>
+          </thead>
+          <tbody style="font-family: 'Spectral', serif; font-style: italic; font-size: 13.5px;">
+            <tr style="border-top: 1px solid oklch(88% 0.02 85);"><td style="padding: 13px 18px;">&ldquo;Bu ürün gerçekten çok kaliteli, tavsiye ederim!&rdquo;</td><td style="padding: 13px 18px;"><span style="font-family: 'Work Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: oklch(55% 0.1 150 / 0.14); color: oklch(42% 0.1 150);">Olumlu</span></td><td style="padding: 13px 18px; text-align: right; font-family: 'Work Sans', sans-serif; font-style: normal; color: oklch(45% 0.03 260);">%98.0</td></tr>
+            <tr style="border-top: 1px solid oklch(88% 0.02 85);"><td style="padding: 13px 18px;">&ldquo;Kargo çok geç geldi ve ürün kırık çıktı, hiç memnun kalmadım.&rdquo;</td><td style="padding: 13px 18px;"><span style="font-family: 'Work Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: oklch(55% 0.14 25 / 0.14); color: oklch(45% 0.14 25);">Olumsuz</span></td><td style="padding: 13px 18px; text-align: right; font-family: 'Work Sans', sans-serif; font-style: normal; color: oklch(45% 0.03 260);">%98.3</td></tr>
+            <tr style="border-top: 1px solid oklch(88% 0.02 85);"><td style="padding: 13px 18px;">&ldquo;Fiyatına göre fena değil, idare eder.&rdquo;</td><td style="padding: 13px 18px;"><span style="font-family: 'Work Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: oklch(65% 0.09 75 / 0.22); color: oklch(45% 0.08 75);">Nötr</span></td><td style="padding: 13px 18px; text-align: right; font-family: 'Work Sans', sans-serif; font-style: normal; color: oklch(45% 0.03 260);">%97.7</td></tr>
+            <tr style="border-top: 1px solid oklch(88% 0.02 85);"><td style="padding: 13px 18px;">&ldquo;Müşteri hizmetleri çok ilgiliydi, teşekkürler.&rdquo;</td><td style="padding: 13px 18px;"><span style="font-family: 'Work Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: oklch(55% 0.1 150 / 0.14); color: oklch(42% 0.1 150);">Olumlu</span></td><td style="padding: 13px 18px; text-align: right; font-family: 'Work Sans', sans-serif; font-style: normal; color: oklch(45% 0.03 260);">%96.5</td></tr>
+          </tbody>
+        </table>
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <div style="height: 40px; padding: 0 18px; border: 1px solid oklch(35% 0.08 260); color: oklch(35% 0.08 260); border-radius: 4px; display: flex; align-items: center; font-size: 13px; font-weight: 600;">Manifesti indir (CSV)</div>
+          <div style="height: 40px; padding: 0 18px; border: 1px solid oklch(35% 0.08 260); color: oklch(35% 0.08 260); border-radius: 4px; display: flex; align-items: center; font-size: 13px; font-weight: 600;">Rapor İndir (PDF)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="max-width: 1312px; margin: 40px auto 0; padding: 0 64px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid oklch(85% 0.02 85); padding-top: 18px;">
+    <span style="font-size: 11.5px; color: oklch(55% 0.03 260);">Yorum Pusulası &middot; Türkçe müşteri yorumları için 3 sınıflı duygu analizi</span>
+    <span style="font-size: 11px; color: oklch(55% 0.03 260); font-style: italic;">Kuzey her zaman yukarıda.</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

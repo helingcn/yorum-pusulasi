@@ -1,0 +1,33 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 60, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "DosyaAnalizi.dc.html", "x": 1520, "y": 60, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "KaranlikMod.dc.html", "x": 3040, "y": 60, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "DirectionB.dc.html", "x": 0, "y": 0, "w": 640, "h": 1040, "page": "page-2" },
+    { "file": "DirectionC.dc.html", "x": 740, "y": 0, "w": 640, "h": 1040, "page": "page-2" },
+    { "file": "DirectionD.dc.html", "x": 1480, "y": 0, "w": 640, "h": 1040, "page": "page-2" }
+  ],
+  "annotations": [
+    {
+      "id": "brief-summary",
+      "x": 0,
+      "y": -140,
+      "w": 1100,
+      "page": "page-1",
+      "text": "Yön A — Kartografik seçildi. Üç ekran: Tekil analiz (aydınlık), Dosya analizi (aydınlık), ve tema adı \"Gece rotası\" olan karanlık mod. Mikro-animasyon notları:\n— Analiz Et'e tıklayınca: sonuç kartı 220ms ease-out ile 8px aşağıdan yukarı kayarak belirir (fade+slide-up), pusula ikonuna benzer bir \"iğne titreşimi\" hissi için hafif bir overshoot (cubic-bezier(0.34,1.3,0.64,1)) kullanılabilir.\n— Güven halkası: 0'dan gerçek değere 500ms'de dolar (stroke-dashoffset animasyonu), sayı da eşzamanlı sayarak artar.\n— Buton hover: 120ms ease, arka plan %8 koyulaşır, imleç değişmez.\n— Karanlık mod geçişi: sadece renk/arka plan 200ms ease ile geçiş yapar, layout hiç kıpırdamaz.\n— \"Karma yön tespit edildi\" kutusu: ilk göründüğünde 150ms gecikmeli, hafif bir amber parıltıyla (box-shadow pulse, 1 kez) dikkat çeker."
+    },
+    {
+      "id": "page-2-not",
+      "x": 0,
+      "y": -80,
+      "w": 700,
+      "page": "page-2",
+      "text": "Elenen yönler (referans için saklanıyor): B — Sinyal, C — Mercan, D — Kontrast."
+    }
+  ],
+  "pages": [
+    { "id": "page-1", "name": "Seçilen Yön — Kartografik" },
+    { "id": "page-2", "name": "Elenen Yönler (referans)" }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

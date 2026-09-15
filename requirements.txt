@@ -1,0 +1,18 @@
+transformers>=4.40.0
+torch>=2.0.0
+# app.py, Streamlit'in resmi/stabil bir API'si olmayan iç DOM detaylarına
+# (data-testid, st-emotion-cache class'ları) doğrudan bağımlı onlarca CSS
+# seçici içeriyor (bkz. README "Bilinen kırılganlıklar"). Bu yüzden geniş bir
+# >= aralığı yerine dar bir sürüm aralığına sabitlendi — bir üst sürüme
+# geçmeden önce arayüz elle (ya da .claude/skills/run-duygu-analizi
+# driver.mjs ile ekran görüntüsü alınarak) doğrulanmalı.
+streamlit>=1.61.0,<1.62.0
+pandas>=2.0.0
+sentencepiece>=0.2.0
+pytest>=8.0.0
+openpyxl>=3.1.0
+accelerate>=1.0.0
+fpdf2>=2.8.7
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+slowapi>=0.1.9

@@ -1,0 +1,35 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Fine-tuned model ağırlıkları — büyük (~1.1GB her biri), git'e uygun değil.
+# Model versiyonlama ayrı bir konu (HF Hub / DVC) — bkz. README.
+duygu_finetuned_v3/
+duygu_finetuned_v4_full/
+duygu_finetuned_v5_full/
+_egitim_gecici_*/
+
+# Node / frontend build çıktıları ve bağımlılıkları
+node_modules/
+frontend/dist/
+frontend/.env.local
+
+# /run skill'inin doğrulama için ürettiği ekran görüntüleri — kalıcı proje
+# içeriği değil, geçici test çıktısı.
+.claude/skills/run-duygu-analizi/screenshots/
+
+# Yerel veri / geri bildirim veritabanı
+geri_bildirimler.db
+geri_bildirimler.csv
+egitim_duzeltmeleri.csv
+
+# Streamlit / editör / OS
+.streamlit/secrets.toml
+.DS_Store
+
+# Tasarım skill'inin ürettiği büyük, seed edilmiş canvas dosyası (~2.4MB,
+# editör kodunu da gömüyor) — kaynak .dc.html/canvas.json dosyaları
+# (asıl yazdığımız tasarım içeriği) izleniyor, bu sadece derlenmiş çıktı.
+tasarim/yorum-pusulasi-marka-yonleri.html
