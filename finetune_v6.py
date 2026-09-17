@@ -1,8 +1,8 @@
-"""v5 tam eğitim tarifine doğrulanmış nötr hata türlerinin karşıtlarını ekler.
+"""Adds counterexamples for verified neutral error types to the v5 full training recipe.
 
-Test/denetim cümleleri eğitime girmez. Yeni aday model ancak kısa yorum,
-TRSAv1 held-out ve bağımsız karşıt set değerlendirmelerini birlikte geçerse
-üretime alınmalıdır.
+Test/audit sentences never enter training. The new candidate model should
+only be promoted to production if it passes the short-review, TRSAv1
+held-out, and independent counterexample-set evaluations together.
 """
 
 from finetune3 import main as tam_egitim

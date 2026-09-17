@@ -1,39 +1,43 @@
 """
-Türkçe Müşteri Yorumları Duygu Analizi
+Turkish Customer Review Sentiment Analysis
 ----------------------------------------
-Çok dilli, üç sınıflı (olumlu/nötr/olumsuz) bir sentiment modelini
-kullanarak Türkçe metinleri sınıflandırır.
+Classifies Turkish text using a multilingual, three-class
+(positive/neutral/negative) sentiment model.
 
-Model: ./duygu_finetuned_v5_full (üretimde) — cardiffnlp/twitter-xlm-roberta-base-sentiment'in
-maydogan/Turkish_SentimentAnalysis_TRSAv1 (gerçek ürün yorumları, dengeli)
-+ sentetik "prosedürel nötr" cümlelerle (sentetik_notr.py) fine-tune edilmiş
-hali (bkz. finetune3.py). v4_full ve v3 aynı zincirin önceki, hâlâ geçerli
-fallback sürümleri (aşağıdaki _FINETUNED_YOL sırasına bakınız).
+Model: ./duygu_finetuned_v5_full (production) — cardiffnlp/twitter-xlm-roberta-base-sentiment
+fine-tuned on maydogan/Turkish_SentimentAnalysis_TRSAv1 (real product reviews,
+balanced) + synthetic "procedural neutral" sentences (sentetik_notr.py)
+(see finetune3.py). v4_full and v3 are earlier, still-valid fallback
+versions of the same chain (see the _FINETUNED_YOL order below).
 
-Turların özeti (detaylar: .claude/skills/run-duygu-analizi/SKILL.md Gotchas):
-              winvoker testi (Wikipedia nötr)   TRSAv1/gold testi (gerçek nötr)
-taban model:  %74.4                              %63.6
-v1:           %91.8  (yanıltıcı — bkz. Gotchas)  %63.1  (gerçekte kazanç yok)
-v2:           %70.0                              %81.3  (gerçek kazanç)
-v3:           %73.2                              %81.6  (+ spesifik hatalar düzeldi)
-v4_full/v5_full: kısa yorum + iade süreci hedefli örnekleriyle iyileştirildi,
-              her biri kendi selefine karşı ölçülüp terfi etti — v5_full üretimde.
-v6 (aday):    gold sette v5_full'e karşı REDDEDİLDİ (doğruluk -3.1, nötr recall -8.3 puan)
+Round summary (details: .claude/skills/run-duygu-analizi/SKILL.md Gotchas):
+              winvoker test (Wikipedia neutral)   TRSAv1/gold test (real neutral)
+base model:   74.4%                                63.6%
+v1:           91.8%  (misleading — see Gotchas)   63.1%  (no real gain)
+v2:           70.0%                                81.3%  (real gain)
+v3:           73.2%                                81.6%  (+ specific errors fixed)
+v4_full/v5_full: improved with short-review + return-process targeted
+              examples, each measured against and promoted over its
+              predecessor — v5_full is in production.
+v6 (candidate): REJECTED against v5_full on the gold set (accuracy -3.1,
+              neutral recall -8.3 points)
 
-v1, olumsuza ağırlık verip nötr'ü winvoker/Wikipedia'dan aldı — evaluate.py'de
-%91.8 gösterdi ama YANILTICIYDI (o testin nötr'ü de Wikipedia). Gerçek
-ürün yorumlarıyla (evaluate_trsav1.py) test edilince v1'in gerçek nötr
-recall'ı %0.7 çıktı. v2, TRSAv1 (gerçek yorum) ile dengeli eğitildi ve
-gerçekten iyileşti. Ama v2 hâlâ "sipariş verildi", "kutunun içinde fatura
-vardı", "fotoğraftakiyle aynı" gibi saf prosedürel/işlemsel cümleleri
-olumsuz sanıyordu — TRSAv1'in kendisinde bile bu tür saf nötr cümleler nadir
-olduğu için. v3, bu boşluğu şablonla üretilmiş ~1500 sentetik prosedürel
-cümleyle dolduruyor; bu spesifik hatalar artık %99+ güvenle düzeldi. v4_full/
-v5_full aynı tarifi hedefli düzeltici örneklerle genişletiyor
-(model_karsilastir.py ile her yeni aday üretimdeki modele karşı ölçülüyor).
+v1 leaned negative and sourced neutral from winvoker/Wikipedia — it scored
+91.8% in evaluate.py but this was MISLEADING (that test's neutral class is
+also Wikipedia). Tested against real product reviews (evaluate_trsav1.py),
+v1's real neutral recall came out to 0.7%. v2 was trained on balanced TRSAv1
+(real reviews) and genuinely improved. But v2 still classified purely
+procedural/transactional sentences like "sipariş verildi" (order placed),
+"kutunun içinde fatura vardı" (there was an invoice in the box), "fotoğraftakiyle
+aynı" (same as in the photo) as negative — because even within TRSAv1 itself,
+such purely neutral procedural sentences are rare. v3 fills that gap with
+~1500 template-generated synthetic procedural sentences; these specific
+errors are now fixed with 99%+ confidence. v4_full/v5_full extend the same
+recipe with targeted corrective examples (every new candidate is measured
+against the production model via model_karsilastir.py).
 
-Model klasörleri sırayla aranır (bkz. _FINETUNED_YOL): v5_full → v4_full →
-v3 → hiçbiri yoksa taban model.
+Model folders are searched in order (see _FINETUNED_YOL): v5_full → v4_full
+→ v3 → base model if none are present.
 """
 
 import re
@@ -47,55 +51,57 @@ _TABAN_MODEL = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 _V5_FULL_YOL = Path(__file__).parent / "duygu_finetuned_v5_full"
 _V4_FULL_YOL = Path(__file__).parent / "duygu_finetuned_v4_full"
 _V3_YOL = Path(__file__).parent / "duygu_finetuned_v3"
-# v5_full, kısa/doğrudan ve iade süreci nötr regresyonlarında iyileşti;
-# TRSAv1 held-out'ta genel doğruluğu ve nötr recall'ı da artırdı.
-# Model klasörü yoksa güvenli biçimde önceki doğrulanmış sürümlere dönülür.
+# v5_full improved on short/direct-review and return-process neutral
+# regressions, and also raised overall accuracy and neutral recall on the
+# TRSAv1 held-out set. Falls back safely to earlier verified versions if a
+# model folder is missing.
 _FINETUNED_YOL = next((yol for yol in (_V5_FULL_YOL, _V4_FULL_YOL, _V3_YOL) if yol.is_dir()), _TABAN_MODEL)
 
-# Model, hem api.py (FastAPI, çoklu istek) hem de app.py (Streamlit, çoklu
-# oturum/thread) tarafından AYNI paylaşılan pipeline nesnesi üzerinden
-# çağrılıyor. Eşzamanlılık koruması burada, tek bir yerde yapılıyor — önceden
-# yalnızca api.py kendi global kilidiyle korunuyordu, app.py hiç korumasızdı.
+# The model is called through the SAME shared pipeline object by both
+# api.py (FastAPI, multiple requests) and app.py (Streamlit, multiple
+# sessions/threads). Concurrency protection lives here, in one place —
+# previously only api.py had its own global lock, app.py had none at all.
 #
-# ÖNEMLİ (canlı doğrulanmış): Burada başlangıçta CPU çekirdek sayısı kadar
-# eşzamanlı çıkarıma izin veren bir semafor vardı ("performans için").
-# React frontend'i gerçek paralel istek attığında (Promise.all ile aynı anda
-# /analiz + /konu-analizi) bu, bu ortamda (macOS + PyTorch) tüm API
-# sürecinin sessizce çökmesine yol açtı (NSException / native abort) —
-# HuggingFace pipeline nesnesi birden fazla thread'den GERÇEKTEN eşzamanlı
-# çağrıldığında güvenli değilmiş, önceki "forward pass'ler thread-safe'dir"
-# varsayımı yanlış çıktı. Bu yüzden semafor kasıtlı olarak 1'e (tam mutex)
-# döndürüldü: aynı anda tek istek işlenir. Bu, hız kaybına yol açar ama
-# çökmeye karşı kesin güvenlidir — kararlılık, performanstan önce gelir.
-# İleride gerçek eşzamanlılık isteniyorsa, tek model nesnesini thread başına
-# ayrı bir kopya olarak yüklemek (veya ayrı worker süreçleri) gerekir.
+# IMPORTANT (verified live): this used to be a semaphore allowing as many
+# concurrent inferences as there are CPU cores ("for performance"). When the
+# React frontend fired genuinely parallel requests (via Promise.all, /analiz
+# + /konu-analizi at the same time), this caused the entire API process to
+# crash silently in this environment (macOS + PyTorch) with a native abort
+# (NSException) — the HuggingFace pipeline object turned out not to be safe
+# when called from multiple threads truly concurrently; the earlier
+# assumption that "forward passes are thread-safe" was wrong. The semaphore
+# was therefore deliberately reduced to 1 (a full mutex): only one request
+# is processed at a time. This costs throughput but is provably crash-safe —
+# stability comes before performance. If real concurrency is wanted later,
+# load a separate copy of the model per worker thread (or use separate
+# worker processes) instead.
 _CIKARIM_SEMAFORU = threading.Semaphore(1)
 
 
 def aktif_model_adi() -> str:
-    """API ve arayüz için seçili üretim modelinin okunabilir adını döndürür."""
+    """Returns the human-readable name of the currently selected production model, for the API and UI."""
     return _FINETUNED_YOL.name if isinstance(_FINETUNED_YOL, Path) else _FINETUNED_YOL
 
 
 def model_yuklu_mu() -> bool:
-    """Kontrol çağrısında modeli yüklemeden mevcut yükleme durumunu bildirir."""
+    """Reports the current load state on a health-check call, without loading the model."""
     return _model_yukle.cache_info().currsize > 0
 
 
 def modeli_hazirla() -> None:
-    """Modeli hemen, ilk kullanıcı isteğini beklemeden yükler.
+    """Loads the model immediately, without waiting for the first user request.
 
-    api.py bunu uygulama açılışında (lifespan) çağırır: model yüklenemezse
-    uygulama hiç ayağa kalkmaz (fail-fast) — kullanıcı ilk isteğinde
-    birkaç saniyelik gizli bir gecikmeyle ya da üretimde bir hatayla
-    karşılaşmaz.
+    api.py calls this at application startup (lifespan): if the model fails
+    to load, the application never comes up at all (fail-fast) — the user
+    never hits a hidden multi-second delay on their first request, nor a
+    failure in production.
     """
     _model_yukle()
 
 
 @lru_cache(maxsize=1)
 def _model_yukle():
-    """Modeli sadece bir kez yükler (cache'ler), her çağrıda tekrar yüklemez."""
+    """Loads the model only once (caches it) — never reloads it on later calls."""
     model_yolu = str(_FINETUNED_YOL) if _FINETUNED_YOL.is_dir() else _TABAN_MODEL
     return pipeline("sentiment-analysis", model=model_yolu)
 
@@ -108,11 +114,12 @@ MAKSIMUM_TOKEN = 512
 
 @lru_cache(maxsize=512)
 def _tum_skorlari_hesapla(kucuk_metin: str) -> tuple[tuple[str, float], ...]:
-    """Bir metni tek kez çalıştırıp üç sınıf skorunu önbelleğe alır.
+    """Runs a text through the model once and caches the scores for all three classes.
 
-    Arayüz önce baskın etiketi, ardından olasılıkları istediğinde aynı metin
-    modele ikinci kez gönderilmez. ``truncation`` uzun yorumların modelin
-    bağlam sınırını aşarak hata vermesini engeller.
+    When the UI asks first for the dominant label and then for the
+    probabilities, the same text is not sent to the model a second time.
+    ``truncation`` prevents very long reviews from erroring out by
+    exceeding the model's context limit.
     """
     with _CIKARIM_SEMAFORU:
         sonuclar = _model_yukle()(
@@ -129,10 +136,10 @@ def _tum_skorlari_hesapla(kucuk_metin: str) -> tuple[tuple[str, float], ...]:
 
 def analiz_et(metin: str) -> dict:
     """
-    Tek bir metni analiz eder.
+    Analyzes a single piece of text.
 
     Args:
-        metin: Analiz edilecek Türkçe metin (örn. bir müşteri yorumu).
+        metin: The Turkish text to analyze (e.g. a customer review).
 
     Returns:
         {"etiket": "olumlu" | "nötr" | "olumsuz", "guven": 0.0-1.0}
@@ -140,10 +147,11 @@ def analiz_et(metin: str) -> dict:
     if not metin or not metin.strip():
         raise ValueError("Boş metin analiz edilemez.")
 
-    # Model büyük harfle başlayan cümlelerde tutarsız davranıyor (örn. "Berbat..."
-    # olumlu, "berbat..." olumsuz çıkabiliyor — aynı anlam, farklı sonuç). Küçük
-    # harfe çevirmek gerçek veri setinde doğruluğu %73.2 -> %74.4 çıkardı (500
-    # örnek, evaluate.py). Bkz. .claude/skills/run-duygu-analizi/SKILL.md Gotchas.
+    # The model behaves inconsistently on sentences starting with a capital
+    # letter (e.g. "Berbat..." can come out positive, "berbat..." negative —
+    # same meaning, different result). Lowercasing raised accuracy on the
+    # real-world eval set from 73.2% to 74.4% (500 examples, evaluate.py).
+    # See .claude/skills/run-duygu-analizi/SKILL.md Gotchas.
     skorlar = _tum_skorlari_hesapla(metin.strip().lower())
     etiket, guven = max(skorlar, key=lambda oge: oge[1])
 
@@ -151,7 +159,7 @@ def analiz_et(metin: str) -> dict:
 
 
 def duygu_olasiliklari(metin: str) -> dict[str, float]:
-    """Üç duygu sınıfının model olasılıklarını arayüz için döndürür."""
+    """Returns the model probabilities for all three sentiment classes, for the UI."""
     if not metin or not metin.strip():
         raise ValueError("Boş metin analiz edilemez.")
 
@@ -160,18 +168,18 @@ def duygu_olasiliklari(metin: str) -> dict[str, float]:
 
 def toplu_analiz(metinler: list[str], ilerleme_callback=None) -> list[dict]:
     """
-    Birden fazla metni batch halinde analiz eder (tek tek analiz_et çağırmak
-    yerine modele parça parça — BATCH_BOYUTU'luk gruplar halinde — verir).
-    500 örnekte ölçüldü: ~1.38x daha hızlı, etiketlerde sıfır fark, güven
-    skorunda en fazla 0.000002 kayan nokta farkı (görünen yüzdeleri
-    etkilemez) — bkz. SKILL.md Gotchas.
+    Analyzes multiple texts as a batch (feeding the model chunks of
+    BATCH_BOYUTU items at a time, instead of calling analiz_et one by one).
+    Measured on 500 examples: ~1.38x faster, zero difference in labels, at
+    most a 0.000002 floating-point difference in confidence scores (doesn't
+    affect the displayed percentages) — see SKILL.md Gotchas.
 
     Args:
-        ilerleme_callback: Verilirse her grup işlendikten sonra
-            ilerleme_callback(islenen, toplam) ile çağrılır (örn. Streamlit
-            ilerleme çubuğu için). Manuel gruplama (pipeline'ın kendi iç
-            batch'lemesine bırakmak yerine) tam bu yüzden — ara ilerleme
-            gözlemlenebilsin diye; hız karakteristiği aynı kalır.
+        ilerleme_callback: If given, called as ilerleme_callback(islenen, toplam)
+            after each chunk is processed (e.g. for a Streamlit progress bar).
+            Chunking manually (instead of leaving it to the pipeline's own
+            internal batching) exists precisely so intermediate progress can
+            be observed; the speed characteristics stay the same.
     """
     for m in metinler:
         if not m or not m.strip():
@@ -184,9 +192,9 @@ def toplu_analiz(metinler: list[str], ilerleme_callback=None) -> list[dict]:
     sonuclar = []
     for i in range(0, toplam, BATCH_BOYUTU):
         parca = kucuk_metinler[i:i + BATCH_BOYUTU]
-        # Semafor her parçadan sonra serbest bırakılıyor (tüm istek boyunca
-        # değil) — böylece büyük bir toplu istek işlenirken diğer eşzamanlı
-        # istekler de parçalar arasında araya girebiliyor.
+        # The semaphore is released after each chunk (not for the whole
+        # request) — so other concurrent requests can interleave between
+        # chunks while a large batch request is being processed.
         with _CIKARIM_SEMAFORU:
             sonuclar.extend(
                 model(
@@ -207,14 +215,15 @@ def toplu_analiz(metinler: list[str], ilerleme_callback=None) -> list[dict]:
 
 def kelime_onemleri(metin: str) -> list[dict]:
     """
-    Her kelimenin karara ne kadar etki ettiğini "leave-one-word-out" (occlusion)
-    yöntemiyle hesaplar: kelime metinden çıkarıldığında modelin, orijinal tahmin
-    edilen etikete verdiği güven ne kadar düşüyor (veya etiket tamamen değişiyor mu).
-    Değer ne kadar yüksekse, o kelime kararı o kadar çok destekliyor demektir.
-    Ekstra kütüphane gerektirmez, mevcut modeli tekrar tekrar çağırır.
+    Computes how much each word contributed to the decision using the
+    "leave-one-word-out" (occlusion) method: how much does the model's
+    confidence in the originally predicted label drop when a word is
+    removed from the text (or does the label change entirely)? The higher
+    the value, the more that word supports the decision. Requires no extra
+    library — it just calls the existing model repeatedly.
 
     Returns:
-        [{"kelime": str, "onem": float}, ...] — metindeki sırayla.
+        [{"kelime": str, "onem": float}, ...] — in the order they appear in the text.
     """
     model = _model_yukle()
     kelimeler = metin.split()
@@ -233,7 +242,7 @@ def kelime_onemleri(metin: str) -> list[dict]:
         if sonuc["label"] == taban_etiket:
             fark = taban_skor - sonuc["score"]
         else:
-            fark = taban_skor  # etiket değiştiyse bu kelime belirleyiciydi
+            fark = taban_skor  # the label changed, so this word was decisive
         onemler.append({"kelime": kelimeler[i], "onem": round(fark, 3)})
 
     return onemler
@@ -252,9 +261,9 @@ _AYIRICI_BAGLAC = re.compile(r"\b(ama|fakat|ancak|lakin)\b", re.IGNORECASE)
 
 
 def _parcalara_ayir(metin: str) -> list[str]:
-    """Metni 'ama/fakat/ancak/lakin' bağlaçlarına ve virgüllere göre parçalara
-    ayırır. Çok kısa (<2 kelime) parçalar atılır — anlamlı bir alt cümle
-    olma ihtimali düşük, sadece gürültü eklerler."""
+    """Splits text into clauses on the conjunctions 'ama/fakat/ancak/lakin'
+    ("but/however") and commas. Very short (<2-word) fragments are dropped —
+    they're unlikely to be a meaningful sub-clause and only add noise."""
     parcalar = _AYIRICI_BAGLAC.split(metin)
     parcalar = [p for p in parcalar if p.strip().lower() not in ("ama", "fakat", "ancak", "lakin")]
 
@@ -275,18 +284,20 @@ def _konulari_bul(parca: str) -> list[str]:
 
 def konu_analizi(metin: str) -> list[dict]:
     """
-    Yorumu konu bazında (kargo, kalite, fiyat, beden, renk, müşteri
-    hizmetleri) parçalara ayırıp her konudaki duyguyu ayrı ayrı analiz eder.
-    Örn. "Kargo hızlıydı ama kalite kötüydü" -> kargo: olumlu, kalite: olumsuz.
+    Splits a review into topics (shipping, quality, price, size, color,
+    customer service) and analyzes the sentiment of each topic separately.
+    E.g. "Shipping was fast but quality was bad" -> shipping: positive,
+    quality: negative.
 
-    Kural tabanlı bir yaklaşım (akademik anlamda "gerçek" ABSA değil): metni
-    bağlaç/virgüle göre böler, her parçada konu sözlüğündeki kelimeleri arar,
-    konu bulunan parçaları mevcut analiz_et ile ayrı ayrı analiz eder. Yeni
-    model/veri gerektirmez. Sınırlamaları için bkz. SKILL.md Gotchas.
+    A rule-based approach (not "real" ABSA in the academic sense): splits
+    the text on conjunctions/commas, looks for the topic dictionary's
+    keywords in each clause, and runs the existing analiz_et separately on
+    clauses where a topic was found. Requires no new model or data. See
+    SKILL.md Gotchas for its limitations.
 
     Returns:
         [{"konu": str, "parca": str, "etiket": str, "guven": float}, ...]
-        Hiçbir parçada bilinen bir konu geçmiyorsa boş liste döner.
+        Returns an empty list if no known topic appears in any clause.
     """
     sonuclar = []
     for parca in _parcalara_ayir(metin):

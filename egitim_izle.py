@@ -1,4 +1,4 @@
-"""Çalışan v6 eğitiminin yaklaşık ilerlemesini terminalde canlı gösterir."""
+"""Shows the running v6 training's approximate progress live in the terminal."""
 
 import subprocess
 import time

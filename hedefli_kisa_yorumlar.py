@@ -1,8 +1,9 @@
-"""Kısa ve kuvvetlendiricisiz müşteri yorumları için hedefli eğitim örnekleri.
+"""Targeted training examples for short customer reviews with no intensifiers.
 
-Bu veri, "üründen memnun kaldım" gibi doğrudan fakat kısa ifadelerin nötr
-etikete kaymasını azaltmak içindir. Regresyon seti bu dosyadan ayrıdır;
-aynı metin iki tarafta da bulunmamalıdır.
+This data exists to reduce the tendency of direct-but-short phrases like
+"üründen memnun kaldım" ("I was happy with the product") to be misclassified
+as neutral. The regression set is a separate file from this one; the same
+text must not appear in both.
 """
 
 from collections import Counter
@@ -61,7 +62,7 @@ _BASLAR = ["", "genel olarak ", "kısacası "]
 
 
 def egitim_ornekleri() -> list[dict]:
-    """Her sınıfta dengeli sayıda, toplam 200'den fazla eğitim örneği döndürür."""
+    """Returns a balanced number of examples per class, over 200 training examples in total."""
     ornekler = []
     for etiket, kaliplar in _KALIPLAR.items():
         for bas in _BASLAR:

@@ -1,7 +1,8 @@
-"""TRSAv1 nötr etiketlerindeki model uyuşmazlıklarını denetim CSV'sine yazar.
+"""Writes model disagreements on TRSAv1 neutral labels to an audit CSV.
 
-Model tahmini yalnızca öneridir. ``manuel_etiket`` ve ``inceleme_notu``
-alanları bir insan tarafından doldurulmadan veri eğitim amacıyla kullanılmaz.
+The model's prediction is only a suggestion. The ``manuel_etiket`` and
+``inceleme_notu`` fields are not used for training purposes until a human
+has filled them in.
 """
 
 import csv

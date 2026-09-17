@@ -1,23 +1,24 @@
 """
-2. tur fine-tuning: cardiffnlp taban modelini TRSAv1 (maydogan/Turkish_
-SentimentAnalysis_TRSAv1) üzerinde, DENGELİ bir dağılımla eğitir.
+Round 2 fine-tuning: trains the cardiffnlp base model on TRSAv1
+(maydogan/Turkish_SentimentAnalysis_TRSAv1) with a BALANCED distribution.
 
-1. turdan (finetune.py) farkı: 1. turda nötr örnekler winvoker veri setinden
-geliyordu ve hepsi Wikipedia kaynaklıydı (gerçek ürün yorumu değil) — bu da
-gerçek dünya nötr tespitinde gerilemeye yol açtı (test_sentiment.py ve elle
-testlerle doğrulandı). TRSAv1'in nötr örnekleri GERÇEK ürün yorumları
-("fena değil ama...", "cilt tipine göre değişebilir" gibi çekimser
-ifadeler), bu yüzden bu turda dengeli bir dağılım (6000+6000+6000) kullanıyoruz.
+Difference from round 1 (finetune.py): in round 1, the neutral examples
+came from the winvoker dataset and were all Wikipedia-sourced (not real
+product reviews) — which caused a regression in real-world neutral
+detection (confirmed via test_sentiment.py and manual testing). TRSAv1's
+neutral examples are REAL product reviews (hedged phrasing like "not bad
+but...", "may vary by skin type"), so this round uses a balanced
+distribution (6000+6000+6000).
 
-Taban modelden (duygu_finetuned değil, orijinal cardiffnlp) yeniden
-başlıyoruz — 1. turun olası tuhaf yan etkilerini biriktirmemek için.
+We start over from the base model (not duygu_finetuned, the original
+cardiffnlp) — to avoid accumulating any odd side effects from round 1.
 
-Diskte sadece tek final model kaydedilir. Çıktı ./duygu_finetuned_v2 —
-mevcut ./duygu_finetuned (1. tur) karşılaştırma için silinmiyor, ikisini de
-evaluate.py + TRSAv1 held-out setiyle test edip hangisini kullanacağımıza
-öyle karar vereceğiz.
+Only a single final model is saved to disk. Output is ./duygu_finetuned_v2
+— the existing ./duygu_finetuned (round 1) is not deleted, since we'll
+test both against evaluate.py + the TRSAv1 held-out set and decide which
+one to use based on that.
 
-Çalıştırmak için: python finetune2.py
+Run with: python finetune2.py
 """
 
 import random
@@ -33,7 +34,7 @@ from transformers import (
 
 BASE_MODEL = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 CIKTI_DIZINI = "./duygu_finetuned_v2"
-HELD_OUT_DOSYA = "./trsav1_held_out.json"  # sonraki değerlendirme için ayrılan örnekler
+HELD_OUT_DOSYA = "./trsav1_held_out.json"  # examples set aside for later evaluation
 
 N_EGITIM_SINIF_BASI = 6000
 N_HELD_OUT_SINIF_BASI = 150
@@ -47,10 +48,10 @@ def main():
     print("TRSAv1 veri seti yükleniyor...")
     ds = load_dataset("maydogan/Turkish_SentimentAnalysis_TRSAv1")["train"]
 
-    random.seed(99)  # finetune.py'deki seed'lerden farklı, karışmasın
+    random.seed(99)  # different from finetune.py's seeds, so they don't mix
 
     egitim_metin, egitim_etiket = [], []
-    held_out = []  # {"text":..., "label":...} — sonraki değerlendirme için
+    held_out = []  # {"text":..., "label":...} — for later evaluation
 
     for sinif_ds_label, model_label in TRSAV1_LABEL_TO_MODEL.items():
         alt_kume = ds.filter(lambda x, s=sinif_ds_label: x["score"] == s)

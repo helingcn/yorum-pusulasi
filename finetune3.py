@@ -1,23 +1,26 @@
 """
-3. tur fine-tuning: finetune2.py (v2) ile aynı olumlu/olumsuz verisi (TRSAv1,
-6000/sınıf), ama nötr sınıfına gerçek TRSAv1 örneklerinin yanına sentetik
-"prosedürel nötr" cümleler de karıştırılıyor (sentetik_notr.py).
+Round 3 fine-tuning: the same positive/negative data as finetune2.py (v2)
+(TRSAv1, 6000/class), but the neutral class now mixes synthetic "procedural
+neutral" sentences in alongside real TRSAv1 examples (sentetik_notr.py).
 
-Neden: v2'de "sipariş verildi", "kutunun içinde X vardı", "fatura",
-"fotoğraftakiyle aynı" gibi saf işlemsel/nesnel cümleler hâlâ olumsuza
-kayıyordu (bkz. SKILL.md Gotchas). Kök neden: gerçek yorum verisinde saf
-prosedürel nötr cümleler zaten nadir (insanlar yorum yazınca genelde bir
-fikir de ekliyor) — TRSAv1'in tamamında bile az. Gerçek veride bulmak yerine
-şablonla üretip çeşitlendirerek bu boşluğu dolduruyoruz.
+Why: in v2, purely transactional/factual sentences like "sipariş verildi"
+(order placed), "kutunun içinde X vardı" (there was X in the box),
+"fatura" (invoice), "fotoğraftakiyle aynı" (same as in the photo) still
+skewed negative (see SKILL.md Gotchas). Root cause: purely procedural
+neutral sentences are already rare in real review data (people who bother
+to write a review usually add an opinion too) — rare even across all of
+TRSAv1. Instead of trying to find more of them in real data, we fill this
+gap by generating diverse ones from templates.
 
-Nötr karışımı: 4500 gerçek TRSAv1 + 1500 sentetik = 6000 (v2 ile aynı
-toplam boyut, adil karşılaştırma için).
+Neutral mix: 4500 real TRSAv1 + 1500 synthetic = 6000 (same total size as
+v2, for a fair comparison).
 
-Bu sürüm ayrıca kısa/doğrudan yorum hata sınıfı için 216 hedefli örnek ekler.
-Çıktı: ./duygu_finetuned_v5_full — üretimdeki v4 silinmez; aday model ancak
-ayrı regresyon seti ve TRSAv1 held-out değerlendirmesini geçerse üretime alınır.
+This round also adds 216 targeted examples for the short/direct-review
+error class. Output: ./duygu_finetuned_v5_full — the production v4 is not
+deleted; a candidate model is only promoted to production if it passes a
+separate regression set and the TRSAv1 held-out evaluation.
 
-Çalıştırmak için: python finetune3.py
+Run with: python finetune3.py
 """
 
 import json
@@ -37,12 +40,12 @@ from hedefli_kisa_yorumlar import egitim_ornekleri as hedefli_kisa_yorumlar
 
 BASE_MODEL = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 CIKTI_DIZINI = "./duygu_finetuned_v5_full"
-HELD_OUT_DOSYA = "./trsav1_held_out.json"  # finetune2.py ile AYNI dosya/mantık — tutarlı karşılaştırma
+HELD_OUT_DOSYA = "./trsav1_held_out.json"  # SAME file/logic as finetune2.py — consistent comparison
 KISA_REGRESYON_DOSYA = "./kisa_yorum_regresyon.json"
 
 N_EGITIM_SINIF_BASI = 6000
 N_HELD_OUT_SINIF_BASI = 150
-N_SENTETIK_NOTR = 1500  # 6000 nötr içindeki sentetik pay; kalan 4500 gerçek TRSAv1
+N_SENTETIK_NOTR = 1500  # synthetic share within the 6000 neutral; remaining 4500 is real TRSAv1
 
 LABEL2ID = {"negative": 0, "neutral": 1, "positive": 2}
 TRSAV1_LABEL_TO_MODEL = {"Negative": "negative", "Neutral": "neutral", "Positive": "positive"}
@@ -53,7 +56,7 @@ def main(ek_hedefli_ornekler=None, cikti_dizini=CIKTI_DIZINI, gecici_dizin="./_e
     print("TRSAv1 veri seti yükleniyor...")
     ds = load_dataset("maydogan/Turkish_SentimentAnalysis_TRSAv1")["train"]
 
-    random.seed(99)  # finetune2.py ile AYNI seed -> AYNI held-out/eğitim ayrımı (tutarlılık)
+    random.seed(99)  # SAME seed as finetune2.py -> SAME held-out/training split (consistency)
 
     egitim_metin, egitim_etiket = [], []
     held_out = []

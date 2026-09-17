@@ -1,18 +1,19 @@
 """
-Bir modelin gerçek, etiketli bir veri seti üzerindeki doğruluğunu ölçer.
-Varsayılan olarak üretimdeki modeli (sentiment.py) test eder; --model ile
-başka bir HuggingFace modelini aynı örneklemde karşılaştırmak için kullanılır.
+Measures a model's accuracy on a real, labeled dataset. By default tests
+the production model (sentiment.py); use --model to compare a different
+HuggingFace model on the same sample.
 
-Veri seti: winvoker/turkish-sentiment-analysis-dataset (CC-BY-SA-4.0)
-- Olumlu/Olumsuz örnekler: 'urun_yorumlari' ve 'magaza_yorumlari' alt kümelerinden
-  (gerçek Hepsiburada/mağaza ürün yorumları).
-- Nötr örnekler: bu veri setinde ürün yorumu kaynaklı nötr örnek YOK; nötr etiketli
-  metinlerin neredeyse tamamı ('wiki' alt kümesi) Wikipedia cümleleri. Yani nötr
-  sonucu, ürün yorumu değil, genel/ansiklopedik metin üzerinde ölçülüyor — bu bir
-  sınırlama, sonuçları yorumlarken göz önünde bulundur.
+Dataset: winvoker/turkish-sentiment-analysis-dataset (CC-BY-SA-4.0)
+- Positive/Negative examples: from the 'urun_yorumlari' and 'magaza_yorumlari'
+  subsets (real Hepsiburada/store product reviews).
+- Neutral examples: this dataset has NO neutral examples sourced from product
+  reviews; almost all neutral-labeled text (the 'wiki' subset) is Wikipedia
+  sentences. So the neutral score is measured on general/encyclopedic text,
+  not product reviews — a real limitation, keep it in mind when interpreting
+  results.
 
-Çalıştırmak için:
-  python evaluate.py                                    # üretimdeki model
+Run with:
+  python evaluate.py                                    # production model
   python evaluate.py --model incidelen/bert-base-turkish-sentiment-analysis-cased
 """
 
@@ -61,7 +62,7 @@ def orneklem_olustur():
 
 def degerlendir(ornekler, tahmin_et):
     dogru = 0
-    karisiklik = Counter()  # (gercek_etiket, tahmin_etiket) -> sayı
+    karisiklik = Counter()  # (true_label, predicted_label) -> count
     sinif_toplam = Counter()
     sinif_dogru = Counter()
 
@@ -85,7 +86,7 @@ def degerlendir(ornekler, tahmin_et):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=None,
-                         help="Karşılaştırılacak HuggingFace model adı. Verilmezse üretimdeki model (sentiment.py) test edilir.")
+                         help="HuggingFace model name to compare. If omitted, the production model (sentiment.py) is tested.")
     args = parser.parse_args()
 
     if args.model:
@@ -97,7 +98,7 @@ def main():
     else:
         from sentiment import analiz_et
         tahmin_et = lambda metin: analiz_et(metin)["etiket"]
-        model_adi = "cardiffnlp/twitter-xlm-roberta-base-sentiment (üretimdeki model)"
+        model_adi = "cardiffnlp/twitter-xlm-roberta-base-sentiment (production model)"
 
     print("Değerlendirme örneklemi hazırlanıyor...")
     ornekler = orneklem_olustur()

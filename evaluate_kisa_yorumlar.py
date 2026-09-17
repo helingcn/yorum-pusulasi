@@ -1,7 +1,7 @@
-"""Kısa/doğrudan yorumlar için eğitimden bağımsız regresyon değerlendirmesi.
+"""Training-independent regression evaluation for short/direct reviews.
 
-Kullanım:
-  python evaluate_kisa_yorumlar.py                 # üretimdeki v3
+Usage:
+  python evaluate_kisa_yorumlar.py                 # production v3
   python evaluate_kisa_yorumlar.py --model ./duygu_finetuned_v4
 """
 
@@ -42,7 +42,7 @@ def metrikleri_yaz(gercekler: list[str], tahminler: list[str]) -> None:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", help="Değerlendirilecek model klasörü")
+    parser.add_argument("--model", help="Model folder to evaluate")
     args = parser.parse_args()
 
     with open(DOSYA, encoding="utf-8") as f:
@@ -56,7 +56,7 @@ def main():
     else:
         from sentiment import analiz_et
         tahmin_et = lambda metin: normalize(analiz_et(metin)["etiket"])
-        model_adi = "üretimdeki model (sentiment.py)"
+        model_adi = "production model (sentiment.py)"
 
     gercekler = [ornek["label"] for ornek in ornekler]
     tahminler = [tahmin_et(ornek["text"]) for ornek in ornekler]

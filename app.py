@@ -1,6 +1,6 @@
 """
-Streamlit arayüzü — Türkçe Duygu Analizi
-Çalıştırmak için: streamlit run app.py
+Streamlit UI — Turkish Sentiment Analysis
+Run with: streamlit run app.py
 """
 
 import html
@@ -48,8 +48,8 @@ UYGULAMA_STILI = """
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
 /* ============================================================
-   1) TEMEL TEMA — ilk tasarım katmanı: renk tokenleri (:root),
-      kart/sekme/buton gibi temel bileşen stilleri.
+   1) BASE THEME — the first design layer: color tokens (:root),
+      base component styles for cards/tabs/buttons.
    ============================================================ */
 
 :root {
@@ -69,16 +69,16 @@ UYGULAMA_STILI = """
   --accent-ink: #ffffff;
   --accent-wash: rgba(74,58,167,0.08);
 }
-/* NOT: burada bilerek bir @media (prefers-color-scheme: dark) bloğu YOK.
-   Önceden vardı ama aşağıdaki "2) ÜRÜN TEMASI" bölümü aynı :root
-   değişkenlerini koşulsuz (sabit açık renklerle) yeniden tanımladığı için
-   CSS önceliği gereği hiçbir zaman uygulanmıyordu — OS karanlık modunu
-   destekliyormuş
-   gibi görünen, gerçekte çalışmayan ölü kod. Tema artık TEK kaynaktan
-   yönetiliyor: aşağıdaki `karanlik_mod` toggle'ı (bkz. sayfanın altındaki
-   OS tercihi ön yükleme mantığı — toggle'ın İLK değeri OS tercihinden
-   okunuyor, ama ondan sonra tamamen kullanıcının elindedir, CSS ile
-   yarışan ikinci bir otomatik kaynak yok). */
+/* NOTE: there is deliberately NO @media (prefers-color-scheme: dark) block
+   here. There used to be one, but since the "2) PRODUCT THEME" section below
+   unconditionally redefines the same :root variables (with fixed light
+   colors), it never actually applied, due to CSS precedence — dead code that
+   looked like it supported OS dark mode but didn't. Theme is now managed
+   from a SINGLE source: the `karanlik_mod` toggle further down the page
+   (see the comment near it — an OS-preference-based initial value was also
+   tried and reverted, live-verified broken; the toggle's default is now a
+   fixed "light", entirely under the user's control, with no second
+   automatic source competing with it via CSS). */
 
 html, body, [class*="st-emotion-cache"]:not([data-testid="stIconMaterial"]) {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -175,12 +175,12 @@ h1.page-title { font-size: 27px; font-weight: 800; margin: 0; color: var(--text-
 .rc-label { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
 .rc-conf { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
 
-/* ---- kelime vurgulama (explainability) ---- */
+/* ---- word highlighting (explainability) ---- */
 .vurgu-metin { line-height: 2.1; font-size: 15px; color: var(--text-primary); }
 .vurgu-metin span.k { padding: 1px 4px; border-radius: 4px; }
 .vurgu-not { font-size: 12.5px; color: var(--text-muted); margin-top: 10px; }
 
-/* ---- konu bazlı analiz ---- */
+/* ---- topic-based analysis ---- */
 .konu-liste { display: flex; flex-direction: column; gap: 10px; }
 .konu-satir { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .konu-ad { font-weight: 700; font-size: 13.5px; color: var(--text-primary); min-width: 130px; text-transform: capitalize; }
@@ -215,7 +215,7 @@ button[kind="secondary"], [data-testid="stBaseButton-secondary"] {
   font-weight: 600 !important;
 }
 
-/* ---- chat_input (tek yorum girişi) ---- */
+/* ---- chat_input (single review input) ---- */
 [data-testid="stChatInput"] {
   border-radius: 10px !important;
 }
@@ -228,14 +228,14 @@ button[kind="secondary"], [data-testid="stBaseButton-secondary"] {
 }
 
 /* ============================================================
-   2) ÜRÜN TEMASI — uygulamayı klasik Streamlit görünümünden daha
-      ürün odaklı bir analiz çalışma alanına taşımak için 1)'in
-      ÜZERİNE BİNEN tema. Buradaki :root aynı değişkenleri KASITLI
-      olarak yeniden tanımlayıp yukarıdaki temel temayı geçersiz
-      kılıyor — yani şu an fiilen görünen renkler burasıdır, 1)
-      değil. İki katman aynı class'ları defalarca override ettiği
-      için bunu düzenlerken 1)'i de kontrol et (bkz. SKILL.md
-      Gotchas — ikon fontu kırılması tam bu yüzden yaşanmıştı).
+   2) PRODUCT THEME — a theme layer that BUILDS ON TOP of 1) to move
+      the app from a classic Streamlit look to a more product-oriented
+      analysis workspace. The :root here DELIBERATELY redefines the
+      same variables, overriding the base theme above — meaning these
+      are the colors actually visible right now, not 1)'s. Since the
+      two layers override the same classes repeatedly, check 1) too
+      when editing this (see SKILL.md Gotchas — that's exactly how the
+      icon font broke).
    ============================================================ */
 :root { --page-plane:#f4f6fb; --surface-1:#fff; --surface-2:#f7f8fc; --text-primary:#17213c; --text-secondary:#536079; --text-muted:#8a94a9; --border:#e5e9f2; --gridline:#e8ebf2; --good:#159b6b; --critical:#db5361; --neutral:#f1ad34; --neutral-text:#ae6f08; --accent:#4f46e5; --accent-wash:#eeedff; --shadow:0 12px 30px rgba(36,47,79,.06); }
 html, body, [class*="st-emotion-cache"]:not([data-testid="stIconMaterial"]) { font-family:'DM Sans',system-ui,sans-serif; }
@@ -255,14 +255,14 @@ html, body, [class*="st-emotion-cache"]:not([data-testid="stIconMaterial"]) { fo
   -webkit-font-smoothing:antialiased !important;
 }
 .stApp { background:var(--page-plane); }
-/* stHeader, sayfanın üst 60px'ini position:absolute + çok yüksek z-index ile
-   kaplıyor. Şeffaf olduğu için görünmüyor ama pointer-events'i kapatılmadıkça
-   altındaki gerçek içeriğe (marka satırındaki karanlık mod toggle'ı tam bu
-   bandın içinde) yapılan tıklamaları yutmaya devam ediyor — canlı Playwright
-   testinde doğrulanan gerçek bir hata, toggle'a tıklanamamasının sebebi
-   buydu. stToolbar (hamburger menü) zaten display:none olduğu için
-   stHeader'ın artık tıklanması gereken hiçbir içeriği yok, tamamen
-   tıklama-geçirmez yapmak güvenli. */
+/* stHeader covers the top 60px of the page with position:absolute and a
+   very high z-index. It's invisible since it's transparent, but unless its
+   pointer-events are disabled it keeps swallowing clicks meant for the real
+   content underneath it (the dark-mode toggle in the brand row sits right
+   within this band) — a real bug, verified with a live Playwright test,
+   that was why the toggle couldn't be clicked. Since stToolbar (the
+   hamburger menu) is already display:none, stHeader has no content left
+   that needs to be clickable, so making it fully click-through is safe. */
 [data-testid="stHeader"] { background:transparent; pointer-events:none; }
 [data-testid="stToolbar"] { display:none !important; }
 .stApp, [data-testid="stAppViewContainer"], .topbar-divider, .model-status,
@@ -280,10 +280,11 @@ div[data-testid="stTextArea"] textarea, button, .card-title, .card-note,
 .block-container { max-width:1320px; padding:1rem 2.2rem 3.5rem; }
 [data-testid="stSidebar"] { display:none; }
 .topbar-divider { height:1px; background:var(--border); margin:10px 0 1.35rem; }
-/* İçerik viewport'un yalnızca üst kısmını dolduruyor, sayfa ortada kesiliyormuş
-   gibi bitiyordu (footer/kapanış yok). Sahte dolgu içerik eklemek yerine
-   gerçek bilgi taşıyan bir alt bilgi satırı ekleniyor — hangi model
-   çalışıyor, bu şeffaflık zaten kullanıcı için değerli. */
+/* Content only filled the top portion of the viewport, so the page felt
+   like it just stopped mid-way (no footer/closure). Instead of adding fake
+   filler content, a footer line with real information is added — which
+   model is running, a piece of transparency that's valuable to the user
+   anyway. */
 .app-footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; color:var(--text-muted); font-size:12px; }
 .app-footer a { color:var(--text-muted); }
 @media (max-width:760px) { .app-footer { margin-top:36px; } }
@@ -297,19 +298,19 @@ div[data-testid="stTextArea"] textarea, button, .card-title, .card-note,
 .feature-pill { padding:5px 9px; background:var(--accent-wash); border:1px solid rgba(79,70,229,.14); border-radius:999px; color:var(--accent); font-size:10.5px; font-weight:700; }
 [data-testid="stTabs"] [role="tablist"] { width:max-content; background:#e9edf6; border-radius:10px; padding:4px; gap:3px; margin-bottom:12px; } [data-testid="stTab"] { padding:8px 18px !important; } [data-testid="stTab"][aria-selected="true"] { background:var(--surface-1); box-shadow:0 2px 7px rgba(40,53,91,.11); }
 [data-testid="stVerticalBlockBorderWrapper"] { border-radius:16px !important; border:1px solid #dce2ed !important; box-shadow:0 8px 22px rgba(36,47,79,.055); } [data-testid="stVerticalBlockBorderWrapper"] > div { padding:1.1rem !important; }
-/* "Tekil analiz" sekmesinde sonuç geldiğinde sağ sütun (kart+olasılıklar+
-   geri bildirim formu) sol sütundan (kısa metin kutusu) çok daha uzuyor,
-   göz asimetrik bir sayfa görüyordu. st.columns zaten flex satırı — kartları
-   o satırın tam yüksekliğine geriyoruz, kısa taraf da uzun tarafla aynı
-   yükseklikte bitiyor (içerik üstte kalır, altta boşluk oluşur — asimetri
-   yerine simetrik bir "boşluk" daha az rahatsız edici).
-   ÖNEMLİ: [role="tabpanel"] ile kapsamlı — bu kural önce TÜM
-   stHorizontalBlock'lara uygulanmıştı, bu da sekmelerin ÜSTÜNDEKİ marka/
-   karanlık-mod toggle satırını da gerdi ve toggle'ın tıklama alanını
-   kaydırıp tekrar tıklanamaz hâle getirdi (canlı Playwright testinde
-   doğrulanan gerçek bir regresyon — o satır st.tabs()'ten önce render
-   edildiği için hiçbir tabpanel içinde değil, bu yüzden bu seçici onu
-   hariç tutuyor). */
+/* On the "Tekil analiz" tab, once a result comes in, the right column
+   (card + probabilities + feedback form) ends up much taller than the left
+   column (short text box), and the page looked asymmetric. st.columns is
+   already a flex row — we stretch the cards to that row's full height, so
+   the short side ends up the same height as the tall one (content stays at
+   the top, empty space forms at the bottom — a symmetric "gap" is less
+   jarring than asymmetry).
+   IMPORTANT: scoped with [role="tabpanel"] — this rule was first applied to
+   ALL stHorizontalBlocks, which also stretched the brand/dark-mode-toggle
+   row ABOVE the tabs, shifting the toggle's click target and making it
+   unclickable again (a real regression, verified with a live Playwright
+   test — that row is rendered before st.tabs(), so it's not inside any
+   tabpanel, which is why this selector excludes it). */
 [role="tabpanel"] [data-testid="stHorizontalBlock"] { align-items:stretch; }
 [role="tabpanel"] [data-testid="stHorizontalBlock"] [data-testid="stVerticalBlockBorderWrapper"] { height:100%; }
 .card-title { color:var(--text-primary); margin-bottom:5px; font-size:14px; } .card-note { color:var(--text-muted); font-size:13px; line-height:1.5; }
@@ -322,11 +323,12 @@ div[data-testid="stTextArea"] textarea, button, .card-title, .card-note,
 .probability-value { text-align:right; color:var(--text-primary); font-variant-numeric:tabular-nums; }
 .vurgu-metin { font-size:14px; } .vurgu-not { font-size:12px; line-height:1.45; } .konu-ad { min-width:100px; font-size:13px; } .konu-parca { font-size:12.5px; }
 .stat-grid { margin-bottom:18px; } .stat-tile { border-color:var(--border); box-shadow:0 5px 15px rgba(36,47,79,.035); } .stat-tile .value { font-size:23px; letter-spacing:-.04em; }
-/* 430px iken sayfada bolca boş alan varken tablo iç kaydırmaya giriyordu
-   (10-15 satırlık tipik bir dosyada bile) — iki tasarım kararı birbiriyle
-   çelişiyordu. 700px, çoğu küçük/orta dosyanın (ör. örnek 13 satırlık CSV)
-   hiç iç kaydırma olmadan sığmasını sağlıyor; büyük dosyalar (MAKSIMUM_
-   TOPLU_YORUM=500'e kadar) için üst sınır olarak kalıyor. */
+/* At 430px, the table started scrolling internally even while there was
+   plenty of empty space on the page (even for a typical 10-15 row file) —
+   two design decisions were contradicting each other. 700px lets most
+   small/medium files (e.g. the 13-row sample CSV) fit with no internal
+   scroll at all, while still acting as an upper bound for large files (up
+   to MAKSIMUM_TOPLU_YORUM=500). */
 .results-table-wrap { max-height:700px; overflow:auto; margin-top:12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-1); }
 .results-table { width:100%; border-collapse:separate; border-spacing:0; color:var(--text-primary); font-size:13px; }
 .results-table th { position:sticky; top:0; z-index:2; padding:12px 14px; background:var(--surface-2); color:var(--text-secondary); border-bottom:1px solid var(--border); text-align:left; font-size:11px; letter-spacing:.04em; text-transform:uppercase; }
@@ -360,7 +362,12 @@ div[data-testid="stTextArea"] textarea, button, .card-title, .card-note,
 .quick-step span { width:22px; height:22px; flex:0 0 22px; display:flex; align-items:center; justify-content:center; border-radius:7px; background:var(--accent-wash); color:var(--accent); font-size:10px; font-weight:800; }
 .upload-head { display:flex; align-items:center; gap:10px; margin-bottom:5px; } .upload-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; background:#eeedff; color:#4f46e5; border-radius:9px; font-size:16px; }
 [data-testid="stChatInput"] { border:1px solid var(--border) !important; border-radius:12px !important; background:var(--surface-2) !important; } [data-testid="stFileUploader"] { background:#fafaff; border:2px dashed #b9b5f4; border-radius:15px; padding:12px; box-shadow:inset 0 0 0 4px #fff; } div[data-testid="stFileUploaderDropzone"] { border:0 !important; background:transparent !important; min-height:130px; } [data-testid="stDataFrame"] { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
-/* Tarayıcının koyu mod tercihini uygulama bileşenlerine yansıtma. */
+/* Hardcodes the light-mode input/button styling for the product theme —
+   this stale comment previously (incorrectly) described it as reflecting
+   the browser's OS dark-mode preference; it does not. The actual dark-mode
+   override lives in the separate `if karanlik_mod:` block further down,
+   which is the single source of truth for the dark theme (see the note
+   near the toggle above). */
 div[data-testid="stTextArea"] textarea { background:#fff !important; color:#17213c !important; border:1px solid #dce2ef !important; border-radius:12px !important; font-size:15px !important; line-height:1.55 !important; }
 div[data-testid="stTextArea"] textarea::placeholder { color:#8a94a9 !important; opacity:1 !important; }
 div[data-testid="stTextArea"] textarea:focus { border-color:#4f46e5 !important; box-shadow:0 0 0 3px rgba(79,70,229,.12) !important; }
@@ -369,7 +376,7 @@ div[data-testid="stFormSubmitButton"] button[kind="primary"]:hover, button[kind=
 div[data-testid="stFormSubmitButton"] button[kind="secondary"] { min-height:44px; background:transparent !important; color:var(--text-secondary) !important; border:1px solid var(--border) !important; box-shadow:none !important; }
 div[data-testid="stFormSubmitButton"] button[kind="secondary"]:hover { color:var(--accent) !important; border-color:var(--accent) !important; background:var(--accent-wash) !important; }
 div[data-testid="stVerticalBlockBorderWrapper"] { background:#fff !important; }
-/* Streamlit bu alanı section olarak üretiyor; dosya seçici de açık kalmalı. */
+/* Streamlit renders this area as a <section>; the file picker must stay visible too. */
 [data-testid="stFileUploaderDropzone"], [data-testid="stFileUploaderDropzone"] > div { background:#fff !important; border-color:#c7d0e3 !important; }
 [data-testid="stFileUploaderDropzone"] button { background:#fff !important; color:#25314b !important; border:1px solid #d7deec !important; border-radius:9px !important; box-shadow:none !important; min-height:38px; }
 [data-testid="stFileUploaderDropzone"] button:hover { background:#f4f5ff !important; border-color:#aaa4f5 !important; }
@@ -382,18 +389,18 @@ div[data-testid="stVerticalBlockBorderWrapper"] { background:#fff !important; }
 """
 st.markdown(UYGULAMA_STILI, unsafe_allow_html=True)
 
-# Karanlık mod: TEK kaynak `karanlik_mod` toggle'ı (session_state). OS'un
-# karanlık tercihini CSS @media sorgusuyla otomatik uygulamıyoruz — bu,
-# kullanıcı toggle'ı tersine çevirdiğinde iki kaynağın çakışmasına yol
-# açan asıl hataydı (STYLE'ın @media bloğu, DESIGN_OVERRIDE'ın koşulsuz
-# :root'u tarafından hep eziliyordu). JS ile OS tercihini okuyup URL'ye
-# yönlendirerek toggle'ın başlangıç değerini otomatik ayarlamak da
-# denendi, ama Streamlit'in components.html iframe'i sandbox'lı ve üst
-# pencereyi yönlendirme (top-level navigation) iznine sahip değil —
-# canlı Playwright testinde doğrulandı: `window.parent.location.replace`
-# "permission" hatasıyla reddediliyor ve sayfa hiç render olmuyor. Bu
-# yüzden en sağlam çözüm en basiti: toggle varsayılanı sabit "aydınlık",
-# tamamen kullanıcı kontrolünde, hiçbir otomatik/gizli ikinci kaynak yok.
+# Dark mode: SINGLE source, the `karanlik_mod` toggle (session_state). We
+# don't automatically apply the OS's dark preference via a CSS @media
+# query — that was the actual bug that made two sources collide when the
+# user flipped the toggle (STYLE's @media block kept getting overridden by
+# DESIGN_OVERRIDE's unconditional :root). Reading the OS preference via JS
+# and redirecting the URL to auto-set the toggle's initial value was also
+# tried, but Streamlit's components.html iframe is sandboxed and doesn't
+# have permission to navigate the top-level window — verified live with
+# Playwright: `window.parent.location.replace` is rejected with a
+# "permission" error and the page never renders. So the most robust fix was
+# the simplest one: the toggle defaults to a fixed "light", entirely under
+# the user's control, with no automatic/hidden second source.
 marka_alani, tema_alani = st.columns([6, 1.25], vertical_alignment="center", gap="small")
 with marka_alani:
     st.markdown(
@@ -410,11 +417,11 @@ with marka_alani:
         unsafe_allow_html=True,
     )
 with tema_alani:
-    # Sabit bir etiket kullanılıyor (önceden duruma göre "☾ Karanlık" /
-    # "☀ Aydınlık" arası değişiyordu). Ekran okuyucular switch'in açık/kapalı
-    # durumunu zaten role="switch"/aria-checked ile anons ediyor; etiketin
-    # kendisinin duruma göre değişmesi hem gereksiz hem de bazı ekran
-    # okuyucularda "ay Karanlık" gibi garip okunmalara yol açabiliyordu.
+    # Uses a fixed label (it used to alternate between "☾ Karanlık" / "☀
+    # Aydınlık" depending on state). Screen readers already announce the
+    # switch's on/off state via role="switch"/aria-checked; having the label
+    # itself change with state was both unnecessary and could produce odd
+    # readouts like "moon Karanlık" on some screen readers.
     karanlik_mod = st.toggle("🌙 Karanlık mod", key="karanlik_mod")
 
 st.markdown('<div class="topbar-divider"></div>', unsafe_allow_html=True)
@@ -550,11 +557,12 @@ with sekme1:
                 analiz_durumu.empty()
                 kayitli_analiz = {"metin": metin, "sonuc": sonuc, "olasiliklar": olasiliklar}
                 st.session_state["tekil_analiz_verisi"] = kayitli_analiz
-            # Konu bazlı analiz burada, sonuç kartından ÖNCE hesaplanıyor —
-            # "karma duygular" rozetini kartın üstünde gösterebilmek için.
-            # Önceden bu hesap sayfanın en altındaki (kapalı) accordion'a
-            # kadar ertelenmişti, bu yüzden konu bazlı analiz gibi öne çıkan
-            # bir özellik sonuç kartında hiç ipucu vermeden gömülü kalıyordu.
+            # Topic-based analysis is computed here, BEFORE the result card —
+            # so the "mixed sentiment" badge can be shown above the card.
+            # This used to be deferred all the way to the (collapsed)
+            # accordion at the bottom of the page, so a headline feature
+            # like topic-based analysis stayed buried with no hint on the
+            # result card at all.
             if "konu_sonuclari" in kayitli_analiz:
                 konu_sonuclari = kayitli_analiz["konu_sonuclari"]
             else:
@@ -708,16 +716,17 @@ with sekme2:
         st.markdown('<div style="height:10px"></div>', unsafe_allow_html=True)
         dosya_anahtari = f"yorum_dosyasi_{st.session_state.get('dosya_yukleyici_no', 0)}"
         dosya = st.file_uploader("Dosya", type=["csv", "xlsx", "json"], key=dosya_anahtari, label_visibility="collapsed")
-        # st.file_uploader'ın "Upload" butonu ve "200MB per file • CSV, XLSX,
-        # JSON" alt yazısı Streamlit'in kendi yerleşik metni — resmi bir
-        # çeviri/i18n API'si yok, bu yüzden uygulamanın geri kalanı %100
-        # Türkçeyken bu iki metin İngilizce kalıyordu. Aynı sayfada zaten
-        # kullanılan teknikle (bkz. "Sonucu kopyala" ve tablo filtresi)
-        # DOM'a JS ile müdahale edip Türkçeleştiriyoruz. Sadece BEKLENEN
-        # İngilizce metinle TAM eşleşirse değiştiriyor — Streamlit ileride
-        # metni değiştirirse sessizce hiçbir şey yapmaz, yanlış bir yeri
-        # bozmaz. MutationObserver, dosya seçilip yükleyici yeniden
-        # render olduğunda da çalışmaya devam etmesini sağlıyor.
+        # st.file_uploader's "Upload" button and its "200MB per file • CSV,
+        # XLSX, JSON" caption are Streamlit's own built-in text — there's no
+        # official translation/i18n API, so these two strings stayed in
+        # English while the rest of the app is 100% Turkish. We patch the
+        # DOM with JS, using the same technique already used elsewhere on
+        # this page ("Sonucu kopyala" and the table filter) to Turkishify
+        # them. Only replaces text that EXACTLY matches the EXPECTED English
+        # string — if Streamlit changes the text in a future version, this
+        # silently does nothing instead of breaking something else. The
+        # MutationObserver keeps it working across re-renders too, e.g.
+        # after a file is selected and the uploader re-renders.
         components.html(
             """<script>
             const turkcelestir = () => {
@@ -851,13 +860,13 @@ with sekme2:
                     filtre_stili = '<style>:root{--filter-bg:#11182a;--filter-text:#edf0f8;--filter-border:#3a4761;--filter-placeholder:#8995ab}</style>'
                 else:
                     filtre_stili = '<style>:root{--filter-bg:#fff;--filter-text:#33405a;--filter-border:#d8ddec;--filter-placeholder:#8a94a9}</style>'
-                # Tabloya her render'da benzersiz bir id veriliyor. Önceden
-                # filtre script'i "sayfadaki .results-table sınıfına sahip
-                # SON eleman" mantığıyla çalışıyordu — birden fazla analiz
-                # art arda çalıştırılırsa (veya DOM'da eski bir kopya
-                # kalırsa) yanlış tabloyu hedefleme riski vardı.
-                # getElementById ile tam olarak bu render'a ait tabloyu
-                # hedefliyoruz, tahmine dayalı seçim yok.
+                # The table gets a unique id on every render. The filter
+                # script used to work on a "LAST element on the page with the
+                # .results-table class" basis — if multiple analyses were run
+                # back to back (or a stale copy was left in the DOM), it
+                # risked targeting the wrong table. getElementById lets us
+                # target exactly the table belonging to this render, no
+                # guesswork.
                 st.session_state["tablo_sayaci"] = st.session_state.get("tablo_sayaci", 0) + 1
                 tablo_id = f"results-table-{st.session_state['tablo_sayaci']}"
                 components.html(

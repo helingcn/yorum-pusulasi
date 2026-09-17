@@ -8,18 +8,18 @@ function baslangicDegeriniBul(): boolean {
     if (kayitli === 'karanlik') return true
     if (kayitli === 'aydinlik') return false
   } catch {
-    // localStorage erişilemiyor (gizli sekme vb.) — OS tercihine düş.
+    // localStorage isn't accessible (private tab, etc.) — fall back to OS preference.
   }
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
 }
 
 /**
- * Karanlık modu <html class="dark"> üzerinden yönetir — Tailwind'in
- * `dark:` varyantı bunu otomatik kullanır. Streamlit sürümünde yaşanan
- * "OS @media sorgusu ile manuel toggle'ın çakışması" ve "toggle'ın görsel
- * katmanının tıklamayı yutması" gibi sorunlar burada mimari olarak
- * mümkün değil: tek kaynak (bu state), gerçek bir <button>, üçüncü parti
- * bir switch bileşeni yok.
+ * Manages dark mode via the <html class="dark"> class — Tailwind's `dark:`
+ * variant picks this up automatically. Issues we hit in the Streamlit
+ * version, like "the OS @media query colliding with the manual toggle" and
+ * "the toggle's visual layer swallowing clicks," are architecturally
+ * impossible here: a single source of truth (this state), a real
+ * <button>, no third-party switch component.
  */
 export function useDarkMode(): [boolean, () => void] {
   const [karanlik, setKaranlik] = useState<boolean>(baslangicDegeriniBul)
@@ -29,7 +29,7 @@ export function useDarkMode(): [boolean, () => void] {
     try {
       localStorage.setItem(DEPOLAMA_ANAHTARI, karanlik ? 'karanlik' : 'aydinlik')
     } catch {
-      // Kalıcı hafızaya yazılamıyor olabilir — sorun değil, bu oturumda çalışır.
+      // May not be writable to persistent storage — not a problem, still works for this session.
     }
   }, [karanlik])
 

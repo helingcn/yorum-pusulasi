@@ -22,8 +22,8 @@ export function SingleAnalysisTab() {
     setHata(null)
     setYukleniyor(true)
     try {
-      // Konu analizi, sonuç kartındaki "karma yön" rozetini gösterebilmek
-      // için sonuçla birlikte, önceden hesaplanıyor.
+      // Topic analysis is computed up front, alongside the result, so the
+      // "mixed sentiment" badge can be shown on the result card.
       const [analizSonucu, konuSonuclari] = await Promise.all([analizEt(metin), konuAnaliziGetir(metin)])
       setAnalizEdilenMetin(metin)
       setSonuc(analizSonucu)

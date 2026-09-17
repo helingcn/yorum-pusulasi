@@ -75,7 +75,7 @@ export function BatchAnalysisTab() {
 
   return (
     <div className="flex flex-col gap-7">
-      {/* Yükleme */}
+      {/* Upload */}
       <div className="flex items-center gap-5 rounded border-[1.5px] border-dashed border-[var(--brass)] p-6" style={{ background: 'color-mix(in oklch, var(--brass) 8%, var(--surface-1))' }}>
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--brass-text)" strokeWidth="1.6" className="shrink-0">
           <path d="M12 3v12M7 8l5-5 5 5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
@@ -122,7 +122,7 @@ export function BatchAnalysisTab() {
 
       {ozet && (
         <>
-          {/* Özet */}
+          {/* Summary */}
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded border border-[var(--border)] bg-[var(--border)] sm:grid-cols-5">
             {[
               { etiket: 'Toplam Kayıt', deger: ozet.toplam, renk: undefined },
@@ -140,7 +140,7 @@ export function BatchAnalysisTab() {
             ))}
           </div>
 
-          {/* Dağılım */}
+          {/* Distribution */}
           <div className="flex flex-col gap-2.5">
             {(['olumlu', 'nötr', 'olumsuz'] as Duygu[]).map((etiket) => {
               const sayi = etiket === 'olumlu' ? ozet.olumlu : etiket === 'nötr' ? ozet.notr : ozet.olumsuz
@@ -158,7 +158,7 @@ export function BatchAnalysisTab() {
             })}
           </div>
 
-          {/* Tablo */}
+          {/* Table */}
           <div>
             <div className="mb-3.5 flex items-center justify-between">
               <div className="font-[var(--font-display)] text-[18px] font-semibold text-[var(--text-primary)]">Manifest — Detaylı Kayıtlar</div>

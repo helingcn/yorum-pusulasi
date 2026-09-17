@@ -1,14 +1,14 @@
 """
-finetune2.py'nin ayırdığı TRSAv1 held-out setiyle (gerçek ürün yorumu,
-gerçek nötr örnekler içerir) bir modeli değerlendirir. evaluate.py'nin
-aksine, nötr örnekler burada Wikipedia değil, gerçek ürün yorumu —
-bu yüzden "gerçek dünya nötr tespiti" sorusuna evaluate.py'den daha
-güvenilir bir cevap verir.
+Evaluates a model against the TRSAv1 held-out set that finetune2.py set
+aside (real product reviews, with real neutral examples). Unlike
+evaluate.py, the neutral examples here are real product reviews, not
+Wikipedia — so this gives a more reliable answer to the "real-world neutral
+detection" question than evaluate.py does.
 
-Çalıştırmak için:
+Run with:
   python evaluate_trsav1.py --model ./duygu_finetuned_v2
-  python evaluate_trsav1.py --model ./duygu_finetuned      # 1. tur ile kıyas
-  python evaluate_trsav1.py                                 # üretimdeki model
+  python evaluate_trsav1.py --model ./duygu_finetuned      # compare with round 1
+  python evaluate_trsav1.py                                 # production model
 """
 
 import argparse
@@ -45,7 +45,7 @@ def main():
     else:
         from sentiment import analiz_et
         tahmin_et = lambda metin: analiz_et(metin)["etiket"]
-        model_adi = "üretimdeki model (sentiment.py)"
+        model_adi = "production model (sentiment.py)"
 
     print(f"Model: {model_adi}")
     print(f"TRSAv1 held-out setinde {len(ornekler)} gerçek ürün yorumu ile değerlendiriliyor...\n")

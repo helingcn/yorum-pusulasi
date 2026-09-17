@@ -1,12 +1,12 @@
 """
-Gerçek veride nadir bulunan "saf işlemsel/prosedürel nötr" cümleleri
-(sipariş verildi, kutunun içinde X vardı, kargo bilgisi gönderildi vb.)
-şablon + varyasyonla üretir. Amaç: finetune3.py'nin eğitim verisine
-ekleyip modelin bu kalıpları "şikayetin girişi" yerine gerçekten nötr
-olarak öğrenmesini sağlamak. Bkz. SKILL.md Gotchas ("sipariş verildi" /
-"fatura" / "aynı" bulguları).
+Generates "purely transactional/procedural neutral" sentences (order
+placed, there was X in the box, shipping info sent, etc.) — which are rare
+in real data — from templates with variation. Goal: add these to
+finetune3.py's training data so the model genuinely learns these patterns
+as neutral instead of "the start of a complaint." See SKILL.md Gotchas
+(the "sipariş verildi" / "fatura" / "aynı" findings).
 
-Çalıştırmak için: python sentetik_notr.py  (örnek çıktı basar)
+Run with: python sentetik_notr.py  (prints sample output)
 """
 
 import itertools
@@ -49,7 +49,7 @@ SABLONLAR = [
     lambda: f"Ürün {b()} beden olarak değiştirildi.",
 ]
 
-SON_UNLU_KALIN = set("aıou")  # da/dı/du/dö -> kalınsa "da"; bu proje icin basit ayrım: kalın/ince
+SON_UNLU_KALIN = set("aıou")  # da/dı/du/dö -> "da" if back vowel; simplified back/front distinction for this project
 
 
 def r(): return random.choice(RENKLER)
@@ -61,7 +61,7 @@ def e(): return random.choice(ESYALAR)
 
 
 def kutuda_esya_cumlesi() -> str:
-    """Basit ünlü uyumu: kelimenin son ünlüsü kalınsa 'da', inceyse 'de'."""
+    """Simple vowel harmony: 'da' if the word's last vowel is a back vowel, 'de' if front."""
     esya = e()
     son_unlu = next((c for c in reversed(esya) if c in "aeıioöuü"), "a")
     baglac = "da" if son_unlu in SON_UNLU_KALIN else "de"
@@ -69,9 +69,10 @@ def kutuda_esya_cumlesi() -> str:
 
 
 def uret(adet: int, seed: int = 123) -> list[str]:
-    """`adet` kadar cümle üretir. Şablon+kelime kombinasyon uzayı `adet`'ten
-    küçükse (sonsuz döngüye girmeden) kalanı tekrarlarla doldurur — bu,
-    yüzlerce kombinasyon varken pratikte nadiren devreye girer."""
+    """Generates `adet` sentences. If the template+word combination space is
+    smaller than `adet` (without going into an infinite loop), fills the rest
+    with repeats — with hundreds of combinations available, this rarely
+    kicks in in practice."""
     random.seed(seed)
     cumleler = set()
     deneme = 0
@@ -81,7 +82,7 @@ def uret(adet: int, seed: int = 123) -> list[str]:
         cumleler.add(sablon())
         deneme += 1
     sonuc = list(cumleler)
-    while len(sonuc) < adet:  # kombinasyon uzayı yetersizse tekrarla tamamla
+    while len(sonuc) < adet:  # fill up with repeats if the combination space runs short
         sablon = random.choice(SABLONLAR)
         sonuc.append(sablon())
     return sonuc
@@ -91,4 +92,4 @@ if __name__ == "__main__":
     ornekler = uret(30)
     for c in ornekler:
         print(c)
-    print(f"\n(örnek 30 tanesi gösterildi, uret(n) ile istenilen sayıda üretilebilir)")
+    print(f"\n(30 sample sentences shown above; use uret(n) to generate as many as you want)")

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Karanlık mod ("Gece rotası"), OS tercihine değil <html class="dark">
-   class'ına bağlı — tek kaynak App.tsx'teki state. */
+/* Dark mode ("Gece rotası" / Night route) is driven by the <html class="dark">
+   class, not OS preference — the single source of truth is the state in App.tsx. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -9,11 +9,11 @@
   --font-sans: 'Work Sans', system-ui, sans-serif;
 }
 
-/* Kartografik yön: bir kaşif günlüğü / saha notu hissi. Aydınlıkta sıcak
-   kağıt + lacivert mürekkep; karanlıkta ("Gece rotası") gece göğü lacivert
-   + pirinç/brass vurgu — sadece renk tersine çevrilmiyor, "gece
-   navigasyonu" temasıyla tutarlı ayrı bir kimlik kazanıyor (vurgu rengi
-   bile değişiyor: aydınlıkta lacivert, karanlıkta pirinç). */
+/* Cartographic direction: the feel of an explorer's field journal. Warm
+   paper + navy ink in light mode; in dark mode ("Gece rotası") a night-sky
+   navy + brass accent — not just an inverted palette, it takes on a
+   distinct identity consistent with the "night navigation" theme (even the
+   accent color itself changes: navy in light, brass in dark). */
 :root {
   --page-plane: oklch(97% 0.015 85);
   --surface-1: oklch(99% 0.008 85);
@@ -59,7 +59,7 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Mikro-animasyonlar — tasarım turunda spesifiye edildi. */
+/* Micro-animations — specified during the design pass. */
 @keyframes sonuc-belir {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -76,8 +76,8 @@ body {
   animation: karma-parilti 900ms ease-out 150ms both;
 }
 
-/* Güven halkasının dolum animasyonu (ResultCard) JS-kontrollü bir
-   stroke-dashoffset transition'ı ile yapılıyor, doğrudan bileşende. */
+/* The confidence ring's fill animation (ResultCard) is done directly in the
+   component, via a JS-controlled stroke-dashoffset transition. */
 
 @media (prefers-reduced-motion: reduce) {
   .sonuc-animasyonu, .karma-rozet-animasyonu {

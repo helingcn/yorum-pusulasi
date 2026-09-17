@@ -1,4 +1,4 @@
-"""FastAPI sözleşme ve doğrulama testleri."""
+"""FastAPI contract and validation tests."""
 
 import io
 
@@ -14,7 +14,7 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def _test_veritabani(tmp_path, monkeypatch):
-    """Geri bildirim testleri gerçek geri_bildirimler.db dosyasına yazmasın."""
+    """Keeps feedback tests from writing to the real geri_bildirimler.db file."""
     monkeypatch.setattr(geri_bildirim, "VERITABANI_DOSYASI", tmp_path / "test_geri_bildirimler.db")
 
 

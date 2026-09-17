@@ -1,17 +1,17 @@
 """
-cardiffnlp/twitter-xlm-roberta-base-sentiment modelini, winvoker/turkish-
-sentiment-analysis-dataset üzerinde, olumsuz sınıfa ağırlık vererek hızlı bir
-şekilde fine-tune eder (tek epoch, ~15-20K örnek).
+Fine-tunes cardiffnlp/twitter-xlm-roberta-base-sentiment on the
+winvoker/turkish-sentiment-analysis-dataset, quickly and with weight
+skewed toward the negative class (one epoch, ~15-20K examples).
 
-Diskte sadece tek bir final model kaydedilir (ara checkpoint YOK,
-optimizer durumu kaydedilmez) — bkz. .claude/skills/run-duygu-analizi/SKILL.md.
+Only a single final model is saved to disk (NO intermediate checkpoints,
+no optimizer state is saved) — see .claude/skills/run-duygu-analizi/SKILL.md.
 
-evaluate.py'nin kullandığı 500 örneklik test seti (aynı seed=42, aynı
-örnekleme sırası) buradan HARİÇ TUTULUR, sızıntı olmasın diye — evaluate.py
-değişmeden, fine-tune öncesi/sonrası adil bir karşılaştırma yapılabilsin.
+The 500-example test set used by evaluate.py (same seed=42, same sampling
+order) is EXCLUDED here to avoid leakage — so evaluate.py, unchanged, can
+give a fair before/after fine-tuning comparison.
 
-Çalıştırmak için: python finetune.py
-Çıktı: ./duygu_finetuned/ (yeni model, ~1.1-1.3GB)
+Run with: python finetune.py
+Output: ./duygu_finetuned/ (new model, ~1.1-1.3GB)
 """
 
 import random
@@ -38,9 +38,9 @@ DATASET_LABEL_TO_MODEL = {"Negative": "negative", "Notr": "neutral", "Positive":
 
 
 def evaluate_py_ile_ayni_orneklem_indeksleri(pozitif, negatif, notr):
-    """evaluate.py'deki orneklem_olustur() ile BİREBİR aynı sırayla,
-    aynı seed ile örnekleme yapıp hangi indekslerin eval'de kullanıldığını
-    döndürür — bunları eğitimden hariç tutacağız."""
+    """Samples with the EXACT same order and seed as evaluate.py's
+    orneklem_olustur(), and returns which indices were used for eval —
+    we'll exclude these from training."""
     random.seed(42)
 
     def rastgele_sec_idx(bolum, n):
@@ -61,15 +61,15 @@ def main():
     negatif = urun.filter(lambda x: x["label"] == "Negative")
     notr = ds.filter(lambda x: x["label"] == "Notr")
 
-    # evaluate.py'nin kullandığı 500 örneği belirle (sızıntı önleme)
+    # Determine the 500 examples used by evaluate.py (to prevent leakage)
     eval_poz_idx, eval_neg_idx, eval_notr_idx = evaluate_py_ile_ayni_orneklem_indeksleri(
         pozitif, negatif, notr
     )
     print(f"evaluate.py'nin test setiyle çakışmaması için hariç tutulan: "
           f"{len(eval_poz_idx)} olumlu, {len(eval_neg_idx)} olumsuz, {len(eval_notr_idx)} nötr")
 
-    # Eğitim havuzu = eval'de kullanılmayan geri kalan her şey
-    random.seed(7)  # eğitim örneklemi için farklı bir seed
+    # Training pool = everything else not used in eval
+    random.seed(7)  # a different seed for the training sample
 
     def egitim_havuzu_sec(bolum, haric_idx, n):
         aday = [i for i in range(len(bolum)) if i not in haric_idx]
@@ -86,7 +86,7 @@ def main():
         + [LABEL2ID["positive"]] * len(pozitif_metinler)
         + [LABEL2ID["neutral"]] * len(notr_metinler)
     )
-    metinler = [m.lower() for m in metinler]  # üretim koduyla tutarlı ön işleme
+    metinler = [m.lower() for m in metinler]  # preprocessing consistent with the production code
 
     birlesik = list(zip(metinler, etiketler))
     random.shuffle(birlesik)
@@ -109,12 +109,12 @@ def main():
     egitim_ds.set_format("torch")
 
     training_args = TrainingArguments(
-        output_dir="./_egitim_gecici",  # save_strategy="no" olduğu için buraya hiçbir şey yazılmaz
+        output_dir="./_egitim_gecici",  # nothing gets written here since save_strategy="no"
         num_train_epochs=1,
         per_device_train_batch_size=16,
         learning_rate=2e-5,
         logging_steps=50,
-        save_strategy="no",       # ARA CHECKPOINT YOK — disk güvenliği için kritik
+        save_strategy="no",       # NO intermediate checkpoints — critical for disk safety
         report_to=[],
         disable_tqdm=False,
     )

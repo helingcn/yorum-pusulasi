@@ -1,12 +1,12 @@
-"""Kullanıcı geri bildirimlerinin kalıcı depolanması.
+"""Persistent storage of user feedback.
 
-Önceden düz CSV dosyasına (geri_bildirimler.csv) satır satır ekleniyordu —
-sorgulanamıyordu ve eşzamanlı yazmalarda güvenli değildi (aynı anda iki
-yazma birbirini bozabilirdi). SQLite'a taşındı: stdlib içinde geliyor (yeni
-bağımlılık yok), dosya kilitleme ile eşzamanlı yazmaları güvenli şekilde
-sıralıyor, ve "yanlış" işaretlenen düzeltmeleri artık ayrı bir CSV
-(egitim_duzeltmeleri.csv) tutmak yerine tek bir kaynaktan SQL ile
-sorgulayabiliyoruz.
+Previously appended line by line to a plain CSV file (geri_bildirimler.csv)
+— it couldn't be queried and wasn't safe for concurrent writes (two
+simultaneous writes could corrupt each other). Moved to SQLite: it ships
+with the stdlib (no new dependency), file locking safely serializes
+concurrent writes, and corrections marked "yanlış" (wrong) can now be
+queried with SQL from a single source instead of keeping a separate CSV
+(egitim_duzeltmeleri.csv).
 """
 
 import sqlite3
@@ -30,24 +30,24 @@ CREATE TABLE IF NOT EXISTS geri_bildirimler (
 
 
 def _baglanti() -> sqlite3.Connection:
-    # Her çağrıda yeni bağlantı: thread'ler arasında paylaşılan bir
-    # sqlite3.Connection nesnesi olmadığı için (Streamlit çoklu thread,
-    # FastAPI çoklu istek) thread-safety sorunu yok — dosya seviyesindeki
-    # kilitlemeyi SQLite'ın kendisi yönetiyor.
+    # A fresh connection on every call: since there's no sqlite3.Connection
+    # object shared across threads (Streamlit multi-threaded, FastAPI
+    # multi-request), there's no thread-safety issue — SQLite itself
+    # manages file-level locking.
     conn = sqlite3.connect(VERITABANI_DOSYASI, timeout=10)
     conn.execute(_SEMA)
     return conn
 
 
 def kaydet(metin: str, tahmin: str, guven: float, karar: str, dogru_etiket: str = "") -> None:
-    """Bir geri bildirimi kaydeder.
+    """Saves a piece of feedback.
 
     Args:
-        metin: Analiz edilen yorum.
-        tahmin: Modelin verdiği etiket.
-        guven: Modelin o tahmine güveni (0-1).
-        karar: Kullanıcının değerlendirmesi ("doğru" / "yanlış").
-        dogru_etiket: karar "yanlış" ise kullanıcının belirttiği doğru etiket.
+        metin: The review that was analyzed.
+        tahmin: The label the model produced.
+        guven: The model's confidence in that prediction (0-1).
+        karar: The user's assessment ("doğru" / "yanlış" — correct/wrong).
+        dogru_etiket: The correct label the user specified, if karar is "yanlış".
     """
     if not metin.strip():
         raise ValueError("Boş yorum geri bildirim olarak kaydedilemez.")
@@ -71,8 +71,8 @@ def kaydet(metin: str, tahmin: str, guven: float, karar: str, dogru_etiket: str 
 
 
 def egitim_duzeltmelerini_al() -> list[dict]:
-    """Yanlış işaretlenen geri bildirimleri, sonraki fine-tune turunda
-    doğrudan kullanılabilecek {"yorum": ..., "etiket": ...} biçiminde döndürür.
+    """Returns feedback marked as wrong, in the {"yorum": ..., "etiket": ...}
+    shape ready to use directly in the next fine-tuning round.
     """
     with _baglanti() as conn:
         conn.row_factory = sqlite3.Row
@@ -84,7 +84,7 @@ def egitim_duzeltmelerini_al() -> list[dict]:
 
 
 def tumunu_al() -> list[dict]:
-    """Tüm geri bildirim kayıtlarını (denetim/analiz amaçlı) döndürür."""
+    """Returns all feedback records (for auditing/analysis)."""
     with _baglanti() as conn:
         conn.row_factory = sqlite3.Row
         satirlar = conn.execute("SELECT * FROM geri_bildirimler ORDER BY id").fetchall()

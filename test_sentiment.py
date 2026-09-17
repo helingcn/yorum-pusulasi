@@ -1,9 +1,9 @@
 """
-sentiment.py için birim testleri.
+Unit tests for sentiment.py.
 
-Çalıştırmak için: pytest test_sentiment.py -v
-(Gerçek modeli kullanır — ilk test modeli belleğe yükler, birkaç saniye sürer;
-sonrakiler _model_yukle'nin lru_cache'i sayesinde hızlı çalışır.)
+Run with: pytest test_sentiment.py -v
+(Uses the real model — the first test loads it into memory, which takes a
+few seconds; later ones are fast thanks to _model_yukle's lru_cache.)
 """
 
 import pytest
@@ -56,9 +56,9 @@ def test_analiz_sonucu_beklenen_anahtarlari_icerir():
 
 
 def test_buyuk_kucuk_harf_tutarli_sonuc_verir():
-    # Model büyük harfle başlayan cümlelerde tutarsız davranıyordu (bkz.
-    # .claude/skills/run-duygu-analizi/SKILL.md); küçük harfe çevirme
-    # düzeltmesi ikisinin de aynı sonucu vermesini sağlamalı.
+    # The model used to behave inconsistently on sentences starting with a
+    # capital letter (see .claude/skills/run-duygu-analizi/SKILL.md); the
+    # lowercasing fix should make both give the same result.
     kucuk = analiz_et("berbat bir ürün, hiç beğenmedim.")
     buyuk = analiz_et("Berbat bir ürün, hiç beğenmedim.")
     assert kucuk["etiket"] == buyuk["etiket"]
@@ -91,7 +91,7 @@ def test_toplu_analiz_sirayi_korur():
 
 
 def test_toplu_analiz_ilerleme_callback_cagrilir():
-    metinler = [f"ürün {i} numaralı sipariş, gayet iyi" for i in range(20)]  # BATCH_BOYUTU(16)'dan büyük -> 2 grup
+    metinler = [f"ürün {i} numaralı sipariş, gayet iyi" for i in range(20)]  # bigger than BATCH_BOYUTU(16) -> 2 chunks
     cagrilar = []
     toplu_analiz(metinler, ilerleme_callback=lambda islenen, toplam: cagrilar.append((islenen, toplam)))
     assert cagrilar == [(16, 20), (20, 20)]

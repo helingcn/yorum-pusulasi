@@ -1,4 +1,4 @@
-"""Üretimdeki v5 ile bir aday modeli gold test setinde karşılaştırır."""
+"""Compares a candidate model against production v5 on the gold test set."""
 
 import argparse
 import json

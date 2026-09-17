@@ -1,4 +1,4 @@
-"""Manuel denetim CSV'sini TRSAv1 held-out setine işleyerek gold set üretir."""
+"""Produces the gold set by applying a manual-audit CSV onto the TRSAv1 held-out set."""
 
 import argparse
 import csv

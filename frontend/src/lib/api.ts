@@ -1,15 +1,15 @@
 import type { AnalizSonucu, Duygu, KelimeOnemi, KonuSonucu, SaglikDurumu, TopluAnalizSonucu } from './types'
 
-// api.py'nin çalıştığı adres — Vite dev sunucusunda .env(.local) ile
-// override edilebilir (bkz. .env.example). Ayarlanmazsa yerel geliştirme
-// varsayımıyla 8000 portuna düşer (README'deki `uvicorn api:app --port 8000`
-// komutuyla eşleşiyor).
+// The address api.py runs on — overridable in the Vite dev server via
+// .env(.local) (see .env.example). Falls back to port 8000 by local dev
+// convention if not set (matches the `uvicorn api:app --port 8000` command
+// in the README).
 const API_TABANI = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 
-// api.py'de API_ANAHTARI ortam değişkeni ayarlandıysa burada da aynı
-// değerin girilmesi gerekir. NOT: bu, tarayıcıya gönderilen bir istemci
-// kodudur — buraya konan anahtar gerçek bir sır DEĞİLDİR, herkese açık bir
-// sitede bunu kullanmayın. Yalnızca yerel/iç kullanım için uygundur.
+// If the API_ANAHTARI environment variable is set in api.py, the same
+// value must be entered here too. NOTE: this is client-side code shipped to
+// the browser — the key placed here is NOT a real secret, don't use this on
+// a publicly accessible site. Only suitable for local/internal use.
 const API_ANAHTARI = import.meta.env.VITE_API_ANAHTARI as string | undefined
 
 class ApiHatasi extends Error {
@@ -38,7 +38,7 @@ async function istekAt<T>(yol: string, secenekler: RequestInit = {}): Promise<T>
       if (typeof govde.detail === 'string') mesaj = govde.detail
       else if (Array.isArray(govde.detail) && govde.detail[0]?.msg) mesaj = govde.detail[0].msg
     } catch {
-      // JSON olmayan bir hata gövdesi — varsayılan mesaj kalsın.
+      // A non-JSON error body — keep the default message.
     }
     throw new ApiHatasi(mesaj, yanit.status)
   }

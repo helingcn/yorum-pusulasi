@@ -17,7 +17,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..', '..', '..');
 
 async function runSingle(page) {
   await page.getByRole('tab', { name: 'Tek Yorum' }).click();
-  // Tek yorum girişi st.chat_input (Enter'a basınca gönderir, ayrı bir buton yok).
+  // The single-review input is st.chat_input (submits on Enter, no separate button).
   const girdi = page.locator('[data-testid="stChatInputTextArea"]');
   await girdi.click();
   await girdi.type('Ürün çok hızlı geldi, çok memnun kaldım!');

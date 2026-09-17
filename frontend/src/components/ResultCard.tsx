@@ -18,8 +18,8 @@ export function ResultCard({ metin, sonuc, karmaYonVar }: ResultCardProps) {
   const yuzde = Math.round(sonuc.guven * 1000) / 10
   const guven = guvenDurumu(sonuc.guven)
 
-  // Güven halkası 0'dan gerçek değere dolarak beliriyor (tasarım turunda
-  // spesifiye edilen mikro-animasyon) — mount'tan hemen sonra hedefe geçiş.
+  // The confidence ring fills from 0 to the real value (a micro-animation
+  // specified during the design pass) — transitions to the target right after mount.
   useEffect(() => {
     const zamanlayici = requestAnimationFrame(() => setHalkaDoldu(true))
     return () => cancelAnimationFrame(zamanlayici)
@@ -32,7 +32,7 @@ export function ResultCard({ metin, sonuc, karmaYonVar }: ResultCardProps) {
       setKopyalandi(true)
       setTimeout(() => setKopyalandi(false), 2000)
     } catch {
-      // Panoya erişim izni yoksa sessizce yok say.
+      // Silently ignore if clipboard access isn't permitted.
     }
   }
 

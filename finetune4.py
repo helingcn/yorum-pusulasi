@@ -1,8 +1,8 @@
-"""v3'ü kısa/doğrudan yorum hata sınıfı için düzeltici olarak fine-tune eder.
+"""Fine-tunes v3 as a corrective for the short/direct-review error class.
 
-v3'ün genel TRSAv1 bilgisini yeniden öğretmek yerine yalnızca 222 hedefli,
-dengeli örnek kullanır. Çıktı yeni v4 klasörüne yazılır; üretime geçiş
-değerlendirmeler tamamlanmadan yapılmaz.
+Uses only 222 targeted, balanced examples instead of re-teaching v3's
+general TRSAv1 knowledge. Output is written to a new v4 folder; it's not
+promoted to production until evaluations are complete.
 """
 
 import json

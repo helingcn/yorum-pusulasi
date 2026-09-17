@@ -1,4 +1,4 @@
-"""Yorum Pusulası bağımsız HTTP API katmanı."""
+"""Yorum Pusulası standalone HTTP API layer."""
 
 import io
 import json as json_modulu
@@ -40,18 +40,18 @@ MAKSIMUM_KARAKTER = 10_000
 MAKSIMUM_TOPLU_YORUM = 500
 Duygu = Literal["olumlu", "nötr", "olumsuz"]
 
-# Kimlik doğrulama: API_ANAHTARI ortam değişkeni ayarlanmazsa auth devre
-# dışı kalır (yerel geliştirme için) — üretime almadan önce mutlaka
-# ayarlanmalı. Ayarlanmışsa /analiz ve /toplu-analiz için zorunludur.
+# Authentication: if the API_ANAHTARI environment variable is not set,
+# auth is disabled (for local development) — it must always be set before
+# going to production. Required for /analiz and /toplu-analiz once set.
 _API_ANAHTARI = os.getenv("API_ANAHTARI")
 _api_anahtari_basligi = APIKeyHeader(name="X-API-Key", auto_error=False)
 
-# CORS: IZINLI_ORIJINLER virgülle ayrılmış origin listesi (örn.
-# "https://uygulamam.com,https://panel.uygulamam.com"). Ortam değişkeni
-# ayarlanmazsa React/Vite geliştirme sunucusunun varsayılan adreslerine
-# düşer (frontend/ klasörü buna göre yazıldı) — üretime alırken gerçek
-# domain'i mutlaka IZINLI_ORIJINLER ile ayarla, aksi hâlde sadece yerel
-# geliştirme origin'leri kabul edilir.
+# CORS: IZINLI_ORIJINLER is a comma-separated origin list (e.g.
+# "https://myapp.com,https://panel.myapp.com"). Falls back to the React/Vite
+# dev server's default addresses if the environment variable is not set
+# (the frontend/ folder is set up for this) — always set the real domain via
+# IZINLI_ORIJINLER before going to production, otherwise only local dev
+# origins are accepted.
 _VARSAYILAN_GELISTIRME_ORIJINLERI = ["http://localhost:5173", "http://127.0.0.1:5173"]
 _IZINLI_ORIJINLER = [o.strip() for o in os.getenv("IZINLI_ORIJINLER", "").split(",") if o.strip()] or _VARSAYILAN_GELISTIRME_ORIJINLERI
 
@@ -66,7 +66,7 @@ def api_anahtarini_dogrula(anahtar: str | None = Depends(_api_anahtari_basligi))
 
 
 class _IstekLoglamaOrtaKatmani(BaseHTTPMiddleware):
-    """Her isteği yöntem, yol, durum kodu ve süresiyle loglar."""
+    """Logs every request with its method, path, status code, and duration."""
 
     async def dispatch(self, request: Request, call_next):
         baslangic = time.perf_counter()
@@ -89,7 +89,7 @@ async def _lifespan(app: FastAPI):
             "Bu yalnızca yerel geliştirme için güvenlidir, üretime bu şekilde alınmamalı."
         )
     logger.info("Model önceden yükleniyor...")
-    modeli_hazirla()  # yüklenemezse burada patlar, uygulama hiç ayağa kalkmaz (fail-fast)
+    modeli_hazirla()  # blows up here if it fails to load — the app never comes up (fail-fast)
     logger.info("Model hazır: %s", aktif_model_adi())
     yield
 
@@ -203,9 +203,9 @@ def kok() -> dict[str, str]:
 
 @app.get("/saglik", tags=["sistem"])
 def saglik() -> dict[str, str | bool]:
-    # modeli_hazirla() lifespan'da çalıştığı için model_yuklu_mu() burada
-    # her zaman True döner (uygulama ayaktaysa model de hazırdır) — artık
-    # kozmetik değil, gerçek bir ön yükleme başarısının yansıması.
+    # model_yuklu_mu() always returns True here because modeli_hazirla() runs
+    # in the lifespan (if the app is up, the model is ready) — no longer
+    # cosmetic, it reflects a real successful preload.
     return {"durum": "hazır", "model": aktif_model_adi(), "model_yuklu": model_yuklu_mu()}
 
 
@@ -248,12 +248,12 @@ def coklu_analiz(request: Request, istek: TopluAnalizIstegi) -> TopluAnalizSonuc
 )
 @limiter.limit("5/minute")
 async def dosyadan_toplu_analiz(request: Request, dosya: UploadFile = File(...)) -> TopluAnalizSonucu:
-    """CSV/Excel(.xlsx)/JSON dosyası yükleyip toplu analiz yapar.
+    """Uploads a CSV/Excel(.xlsx)/JSON file and runs a batch analysis.
 
-    Ayrıştırma mantığı app.py'nin Streamlit sürümüyle aynıdır (dosyada
-    ``yorum`` adında bir sütun/alan aranır, boş satırlar atlanır) — iki
-    istemci (Streamlit ve React) aynı sözleşmeye göre çalışsın diye burada,
-    API katmanında merkezileştirildi.
+    The parsing logic is identical to app.py's Streamlit version (looks for
+    a column/field named ``yorum``, skips empty rows) — centralized here, in
+    the API layer, so both clients (Streamlit and React) work against the
+    same contract.
     """
     uzanti = (dosya.filename or "").lower().rsplit(".", 1)[-1]
     icerik = await dosya.read()

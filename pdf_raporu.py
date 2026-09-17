@@ -1,12 +1,12 @@
-"""Toplu analiz sonuçlarından PDF özet raporu üretir.
+"""Generates a PDF summary report from batch analysis results.
 
-app.py'den ayrı bir modülde tutuluyor — Streamlit'e (st.*) hiçbir bağımlılığı
-olmayan saf bir fonksiyon; app.py'nin içinde kalması, bu fonksiyonu test
-etmek için tüm Streamlit script'ini (widget'lar, formlar) çalıştırmayı
-gerektirirdi. Nitekim `import app` ile doğrudan test edilmeye çalışıldığında,
-app.py'nin üst düzeyde çalışan kodu Streamlit'in dahili form/sayfa state'ini
-kirletip AŞAĞIDAKİ AppTest tabanlı testleri "Forms cannot be nested in other
-forms" hatasıyla bozmuştu — bu modülün ayrılma sebebi budur.
+Kept in a module separate from app.py — a pure function with no dependency
+on Streamlit (st.*); leaving it inside app.py would have required running
+the whole Streamlit script (widgets, forms) just to test this function.
+Indeed, when it was tried directly via `import app`, app.py's top-level
+code polluted Streamlit's internal form/page state and broke the
+AppTest-based tests below with a "Forms cannot be nested in other forms"
+error — that's why this module was split out.
 """
 
 from datetime import datetime
@@ -15,11 +15,11 @@ from pathlib import Path
 import pandas as pd
 from fpdf import FPDF
 
-# Önceden sabit bir macOS sistem yoluydu (/System/Library/Fonts/...) — Docker/
-# Linux/Windows'ta dosya bulunamadığı için PDF indirme düğmesi doğrudan
-# çöküyordu (canlı doğrulanmış bir taşınabilirlik hatası). Artık Türkçe
-# karakterleri (ş, ğ, ı, ö, ü, ç) destekleyen bir Unicode font, işletim
-# sisteminden bağımsız olması için doğrudan repo içine gömülü (fonts/).
+# Used to be a hardcoded macOS system path (/System/Library/Fonts/...) — the
+# PDF download button crashed outright on Docker/Linux/Windows because the
+# file couldn't be found there (a live-verified portability bug). Now uses a
+# Unicode font that supports Turkish characters (ş, ğ, ı, ö, ü, ç), bundled
+# directly into the repo (fonts/) so it's OS-independent.
 PDF_FONT = Path(__file__).parent / "fonts" / "DejaVuSans.ttf"
 
 
